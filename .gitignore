@@ -4,6 +4,9 @@
 __pycache__/
 *.pyc
 
+# Running conf file from template
+hubTelemetry.conf
+
 # Telemetry sequence file (runtime state)
 telemetry.seq
 
