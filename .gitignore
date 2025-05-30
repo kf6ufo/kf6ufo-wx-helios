@@ -1,0 +1,15 @@
+# .gitignore
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Telemetry sequence file (runtime state)
+telemetry.seq
+
+# IDE/editor temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
+
