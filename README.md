@@ -21,6 +21,10 @@ This is the "hub" part of a solar powered APRS RF-Weather station project for am
 ## Configuration
 - Edit hubTelemetry.conf to set: Callsign, lat/lon, symbol, path, and destination
 - Edit hubTelemetry.conf to set: Symbol table ("primary" or "secondary")
+- Copy the template file to create your deployment config:
+
+```bash
+cp hubTelemetry.conf.template hubTelemetry.conf
 
 - psutil
 Install psutil:
