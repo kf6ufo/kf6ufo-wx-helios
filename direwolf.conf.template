@@ -1,0 +1,18 @@
+# direwolf configuration
+#
+ADEVICE plughw:1,0
+
+
+# Channel 0
+CHANNEL 0
+MYCALL NOCALL-0
+MODEM 1200
+PTT RIG 2 localhost:4534
+
+# Virtual TNC Server
+AGWPORT 8000
+KISSPORT 8001
+
+# Beacon
+PBEACON delay=1 every=5 lat=10.000 long=-100.000 symbol=/r comment="NOCALL-0, Configure WX Station Direwolf Beacon" via=WIDE2-1
+
