@@ -36,6 +36,21 @@ The project will expand to include several related components:
 - Python 3.x
 - `psutil` Python package
 
+## Building ws-helios-direwolf
+
+This repository includes the [ws-helios-direwolf](https://github.com/kf0tke/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon:
+
+```bash
+
+git submodule update --init
+cd external/direwolf
+mkdir build && cd build
+cmake ..
+make -j4
+sudo make install
+```
+
+
 ## Configuration
 
 Copy the template and edit the values for your station:
