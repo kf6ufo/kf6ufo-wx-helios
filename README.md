@@ -2,7 +2,7 @@
 
 A simple, hardware-agnostic APRS telemetry beacon system for Raspberry Pi, laptops, and field stations.  This is a holding place repo until I get a vanity call sign for this project, but everything is still working if it is in the repo.
 
-This is the "hub" part of a solar powered APRS RF-Weather station project for amateur radio.
+This is the "hub" part of a solar-powered APRS RF-Weather station project for amateur radio.
 
 ## Features
 
