@@ -32,3 +32,7 @@ cp hubTelemetry.conf.template hubTelemetry.conf
 ```bash
 pip3 install psutil
 ```
+
+## License
+
+This project is licensed under the GNU General Public License version 2.0. See [LICENSE](LICENSE) for details.
