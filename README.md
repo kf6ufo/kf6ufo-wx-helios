@@ -1,33 +1,50 @@
 # KF0TKE APRS Telemetry Beacon
 
-A simple, hardware-agnostic APRS telemetry beacon system for Raspberry Pi, laptops, and field stations.  This is a holding place repo until I get a vanity call sign for this project, but everything is still working if it is in the repo.
+A simple APRS telemetry beacon intended for Raspberry Pi and other small computers. This repository forms the core of the **wx‑helios** project—a solar‑powered APRS weather and telemetry suite for amateur radio.
 
-This is the "hub" part of a solar-powered APRS RF-Weather station project for amateur radio.
+## Hardware platforms
+
+The same Python code can be deployed on three target platforms:
+
+1. **Radio/Computer** – a generic setup for testing or casual use on any amateur station.
+2. **Production** – a quality build using the DigiRig interface, a Yaesu FT‑65R handheld, and a Raspberry Pi 4.
+3. **Cheapest** – the lowest‑cost option with a USB audio dongle, a simple PTT circuit, a Baofeng radio, and (if possible) a Raspberry Pi 3.
+
+## Repository modules
+
+The project will expand to include several related components:
+
+- `wx-helios-direwolf` and `wx-helios-direwolf telemetry`
+- `wx-helios repeater` and `wx-helios repeater telemetry`
+- `weather station` support (currently HP2551 Wi‑Fi Weather) with APRS reports and telemetry
+- `wx-helios controller` and `wx-helios controller telemetry`
+- `wx-helios transceiver` and `wx-helios transceiver telemetry`
+- `wx-heliox solar-power controller` and `wx-heliox solar-power controller telemetry`
+- `wx-heliox solar-panels` and `wx-heliox solar-panels telemetry`
 
 ## Features
 
-- APRS position + telemetry in human-readable comment format
-- Configurable via INI file
-- Fully compatible with Direwolf KISS interface
-- Fully portable across hardware platforms (Pi, laptop, field box)
-- Field-tested symbol handling, beacon loop, and telemetry extraction
+- APRS position and telemetry embedded in a human-readable comment
+- Configuration via an INI file
+- Works with the Direwolf KISS interface
+- Portable across hardware platforms
+- Proven symbol handling, beacon loop and telemetry extraction
 
 ## Requirements
 
 - Debian / Ubuntu / Raspberry Pi OS
-- Python 3.x
-- psutil Python package
+- Python 3.x
+- `psutil` Python package
 
 ## Configuration
-- Edit hubTelemetry.conf to set: Callsign, lat/lon, symbol, path, and destination
-- Edit hubTelemetry.conf to set: Symbol table ("primary" or "secondary")
-- Copy the template file to create your deployment config:
+
+Copy the template and edit the values for your station:
 
 ```bash
 cp hubTelemetry.conf.template hubTelemetry.conf
 ```
 
-- Install psutil:
+Set callsign, coordinates, symbol table, path and destination. Install the dependencies with:
 
 ```bash
 pip3 install psutil
@@ -35,4 +52,4 @@ pip3 install psutil
 
 ## License
 
-This project is licensed under the GNU General Public License version 2.0. See [LICENSE](LICENSE) for details.
+This project is licensed under the GNU General Public License version 2. See [LICENSE](LICENSE) for details.
