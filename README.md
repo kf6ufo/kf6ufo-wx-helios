@@ -27,7 +27,7 @@ This is the "hub" part of a solar-powered APRS RF-Weather station project for am
 cp hubTelemetry.conf.template hubTelemetry.conf
 ```
 
-Install psutil:
+- Install psutil:
 
 ```bash
 pip3 install psutil
