@@ -67,6 +67,21 @@ Start the Direwolf TNC with the helper script:
 This uses `direwolf.conf` (copied from the template if missing) and writes
 logs to `direwolf.log`.
 
+## Running rigctld
+
+Launch `rigctld` for radio control with the helper script. Pass the rig model ID
+and the `/dev/ttyUSB` device number:
+
+```bash
+./run_rigctld.sh <rig-id> <usb-num>
+```
+
+For example to start model `503` on `/dev/ttyUSB0`:
+
+```bash
+./run_rigctld.sh 503 0
+```
+
 
 ## Configuration
 
