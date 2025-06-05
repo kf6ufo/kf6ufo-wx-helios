@@ -34,7 +34,7 @@ The project will expand to include several related components:
 
 - Debian / Ubuntu / Raspberry Pi OS
 - Python 3.x
-- `psutil` Python package
+- Python dependencies listed in `requirements.txt` (install with `pip install -r requirements.txt`)
 
 ## Building ws-helios-direwolf
 
@@ -79,7 +79,7 @@ cp hubTelemetry.conf.template hubTelemetry.conf
 Set callsign, coordinates, symbol table, path and destination. Install the dependencies with:
 
 ```bash
-pip3 install psutil
+pip install -r requirements.txt
 ```
 
 ## License
