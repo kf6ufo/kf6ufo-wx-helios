@@ -50,6 +50,12 @@ make -j4
 sudo make install
 ```
 
+Or run the helper script from the repository root to perform the above steps automatically:
+
+```bash
+./build_direwolf.sh
+```
+
 ## Running wx-helios-direwolf
 
 Start the Direwolf TNC with the helper script:
