@@ -50,6 +50,17 @@ make -j4
 sudo make install
 ```
 
+## Running wx-helios-direwolf
+
+Start the Direwolf TNC with the helper script:
+
+```bash
+./run_direwolf.sh
+```
+
+This uses `direwolf.conf` (copied from the template if missing) and writes
+logs to `direwolf.log`.
+
 
 ## Configuration
 
