@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
-from datetime import datetime
-from collections import deque
 from datetime import datetime, timedelta
+from collections import deque
+import logging
+import time
 
 PORT = 8080
 PATH = "/data/report"
@@ -11,6 +12,13 @@ RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
 LAT = "3742.12N"    # exactly 8 chars
 LON = "10854.32W"   # exactly 9 chars
 POS_BLOCK = f"{LAT}/{LON}_"
+
+# configure logging to use UTC timestamps
+logging.Formatter.converter = time.gmtime
+logging.basicConfig(level=logging.INFO,
+                    format='[%(asctime)s UTC] %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 
 def update_rain_24h(post):
@@ -73,18 +81,16 @@ def ecowitt_to_aprs(p):
 
 
 def log_params(client, params):
-    ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-    print(f"\n[{ts}] Ecowitt upload from {client}")
+    logger.info("Ecowitt upload from %s", client)
     for k in sorted(params):
-        print(f"  {k:<15}: {params[k]}")
-    print(ecowitt_to_aprs(params))
+        logger.info("  %s: %s", k, params[k])
+    logger.info(ecowitt_to_aprs(params))
 
 
 class Handler(BaseHTTPRequestHandler):
     def setup(self):
         super().setup()
-        ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-        print(f"[{ts}] Connection from {self.client_address[0]}:{self.client_address[1]}")
+        logger.info("Connection from %s:%s", self.client_address[0], self.client_address[1])
 
     def _okay(self):
         self.send_response(200)
@@ -114,5 +120,5 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 if __name__ == "__main__":
-    print(f"Listening on 0.0.0.0:{PORT}{PATH}")
+    logger.info("Listening on 0.0.0.0:%s%s", PORT, PATH)
     HTTPServer(("", PORT), Handler).serve_forever()
