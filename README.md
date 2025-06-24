@@ -97,6 +97,12 @@ Set callsign, coordinates, symbol table, path and destination. Install the depen
 pip install -r requirements.txt
 ```
 
+## Runtime directory
+
+Scripts create writable files under `runtime/` in the project root. For example,
+`ecowitt-listener.py` writes the latest APRS frame to `runtime/wxnow.txt` each
+time it logs data.
+
 ## License
 
 This project is licensed under the GNU General Public License version 2. See [LICENSE](LICENSE) for details.
