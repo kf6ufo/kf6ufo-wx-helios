@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
 from datetime import datetime, timedelta
 from collections import deque
+from pathlib import Path
 import logging
 import time
 
@@ -12,13 +13,25 @@ RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
 LAT = "3742.12N"    # exactly 8 chars
 LON = "10854.32W"   # exactly 9 chars
 POS_BLOCK = f"{LAT}/{LON}_"
+# directories
+PROJECT_ROOT = Path(__file__).resolve().parent
+RUNTIME_DIR = PROJECT_ROOT / "runtime"
+RUNTIME_DIR.mkdir(exist_ok=True)
+WXNOW = RUNTIME_DIR / "wxnow.txt"
 
 # configure logging to use UTC timestamps
 logging.Formatter.converter = time.gmtime
 logging.basicConfig(level=logging.INFO,
                     format='[%(asctime)s UTC] %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
+
 logger = logging.getLogger(__name__)
+
+def write_wxnow(frame):
+    now = datetime.utcnow().strftime("%b %d %Y %H:%M\n")
+    with open(WXNOW, "w") as f:
+        f.write(now)
+        f.write(frame + "\n")
 
 
 def update_rain_24h(post):
@@ -84,7 +97,9 @@ def log_params(client, params):
     logger.info("Ecowitt upload from %s", client)
     for k in sorted(params):
         logger.info("  %s: %s", k, params[k])
-    logger.info(ecowitt_to_aprs(params))
+    frame = ecowitt_to_aprs(params)
+    logger.info(frame)
+    write_wxnow(frame)
 
 
 class Handler(BaseHTTPRequestHandler):
