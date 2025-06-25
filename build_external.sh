@@ -15,5 +15,5 @@ build_module() {
     cd ../../..
 }
 
-build_module external/direwolf
 build_module external/hamlib
+build_module external/direwolf

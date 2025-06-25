@@ -50,7 +50,8 @@ This repository includes the
 [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
 [wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
 to provide the Direwolf TNC and the `rigctld` daemon. Build both with the helper
-script, which automatically pulls the latest sources from GitHub:
+script, which automatically pulls the latest sources from GitHub. Hamlib is
+built first so Direwolf can detect the libraries:
 
 ```bash
 ./build_external.sh
