@@ -54,7 +54,7 @@ enabled = yes
 [RIG]
 # Enable or disable rigctld
 enabled = yes
-# Rig model ID for rigctld
-rig_id = 503
+# Rig model ID for rigctld (1 = dummy rig)
+rig_id = 1
 # USB device number for /dev/ttyUSB{usb_num}
 usb_num = 0
