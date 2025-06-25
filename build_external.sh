@@ -38,15 +38,17 @@ build_hamlib() {
     # headers land in "lib" and "include/hamlib". This avoids writing to
     # system directories like /usr/local.
     local prefix="$ROOT_DIR"
+    local libdir="$prefix/lib"
+    local includedir="$prefix/include"
 
     # First build with debug CFLAGS
-    ../configure --prefix="$prefix" CFLAGS="-g -O0"
+    ../configure --prefix="$prefix" --libdir="$libdir" --includedir="$includedir" CFLAGS="-g -O0"
     make -j"$(nproc)"
     make install
 
     # Reconfigure to install binaries to the local prefix with release flags
     make distclean || true
-    ../configure --prefix="$prefix"
+    ../configure --prefix="$prefix" --libdir="$libdir" --includedir="$includedir"
     make -j"$(nproc)"
     make check
     make install
