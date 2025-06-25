@@ -30,11 +30,27 @@ def load_aprs_config():
 def load_ecowitt_config():
     cfg = _get_config()
     if "ECOWITT" not in cfg:
-        return {"port": 8080, "path": "/data/report", "lat": "3742.12N", "lon": "10854.32W"}
+        return {
+            "port": 8080,
+            "path": "/data/report",
+            "lat": "3742.12N",
+            "lon": "10854.32W",
+            "enabled": True,
+        }
     eco = cfg["ECOWITT"]
     return {
         "port": int(eco.get("port", 8080)),
         "path": eco.get("path", "/data/report"),
         "lat": eco.get("lat", "3742.12N"),
         "lon": eco.get("lon", "10854.32W"),
+        "enabled": eco.getboolean("enabled", True),
     }
+
+
+def load_hubtelemetry_config():
+    cfg = _get_config()
+    section = "HUBTELEMETRY"
+    if section not in cfg:
+        return {"enabled": True}
+    hub = cfg[section]
+    return {"enabled": hub.getboolean("enabled", True)}

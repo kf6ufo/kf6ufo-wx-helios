@@ -91,7 +91,10 @@ cp wx-helios.conf.template wx-helios.conf
 Telemetry sequence counters are no longer used, so the previous
 `[TELEMETRY]/sequence_file` option has been removed.
 
-The file contains APRS beacon details and Ecowitt listener settings. Install the dependencies with:
+The file contains APRS beacon details and Ecowitt listener settings. Two
+boolean options control whether the Ecowitt listener and telemetry beacon run
+at all: ``[ECOWITT]/enabled`` and ``[HUBTELEMETRY]/enabled``. Set them to ``no``
+to disable the corresponding service. Install the dependencies with:
 
 ```bash
 pip install -r requirements.txt
