@@ -41,9 +41,7 @@ The resulting `rigctld` binary is left inside
 ```
 
 After building, `main.py` will automatically launch Direwolf and `rigctld`
-whenever they are enabled in ``wx-helios.conf``. The separate helper scripts
-previously used to start these services have been removed.
-
+whenever they are enabled in ``wx-helios.conf``.
 
 ## Configuration
 
