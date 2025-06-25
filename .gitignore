@@ -9,8 +9,6 @@ __pycache__/
 hubTelemetry.conf
 wx-helios.conf
 
-# Telemetry sequence file (runtime state)
-telemetry.seq
 runtime/
 
 # IDE/editor temporary files
