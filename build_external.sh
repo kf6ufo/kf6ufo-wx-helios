@@ -5,7 +5,6 @@ set -e
 
 # Absolute path to the project root
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-mkdir -p "$ROOT_DIR/bin" "$ROOT_DIR/include" "$ROOT_DIR/lib"
 
 # Ensure autoconf, automake and libtool are available
 ensure_autotools() {
@@ -34,24 +33,11 @@ build_hamlib() {
     mkdir -p build
     cd build
 
-    # Install Hamlib directly under the project root so libraries and
-    # headers land in "lib" and "include/hamlib". This avoids writing to
-    # system directories like /usr/local.
-    local prefix="$ROOT_DIR"
-    local libdir="$prefix/lib"
-    local includedir="$prefix/include"
-
-    # First build with debug CFLAGS
-    ../configure --prefix="$prefix" --libdir="$libdir" --includedir="$includedir" CFLAGS="-g -O0"
-    make -j"$(nproc)"
-    make install
-
-    # Reconfigure to install binaries to the local prefix with release flags
-    make distclean || true
-    ../configure --prefix="$prefix" --libdir="$libdir" --includedir="$includedir"
+    # Configure and build Hamlib without installing it. The rigctld binary will
+    # remain under the build/tests directory.
+    ../configure CFLAGS="-g -O0"
     make -j"$(nproc)"
     make check
-    make install
 
     cd ../../..
 }
