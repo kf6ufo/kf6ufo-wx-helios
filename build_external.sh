@@ -3,17 +3,29 @@
 
 set -e
 
-# Function to build a submodule
-build_module() {
-    local path="$1"
+# Build Hamlib using autotools
+build_hamlib() {
+    local path="external/hamlib"
+    git submodule update --init --remote "$path"
+    cd "$path"
+    mkdir -p build
+    cd build
+    ../configure
+    make -j"$(nproc)"
+    cd ../../..
+}
+
+# Build Direwolf using CMake
+build_direwolf() {
+    local path="external/direwolf"
     git submodule update --init --remote "$path"
     cd "$path"
     mkdir -p build
     cd build
     cmake ..
-    make -j$(nproc)
+    make -j"$(nproc)"
     cd ../../..
 }
 
-build_module external/hamlib
-build_module external/direwolf
+build_hamlib
+build_direwolf
