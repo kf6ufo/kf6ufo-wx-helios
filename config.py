@@ -3,6 +3,10 @@ from pathlib import Path
 
 CONFIG_PATH = Path(__file__).resolve().parent / "wx-helios.conf"
 
+# Default TCP port for rigctld. This value must match the port used in
+# ``direwolf.conf.template`` on the ``PTT RIG`` line.
+RIGCTLD_PORT = 4534
+
 _config = None
 
 def _get_config():
@@ -76,4 +80,5 @@ def load_rig_config():
         result["rig_id"] = int(rig.get("rig_id", 0))
     if "usb_num" in rig:
         result["usb_num"] = int(rig.get("usb_num", 0))
+    result["port"] = int(rig.get("port", RIGCTLD_PORT))
     return result

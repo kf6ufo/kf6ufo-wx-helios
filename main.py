@@ -29,7 +29,7 @@ def start_direwolf():
     return subprocess.Popen(cmd)
 
 
-def start_rigctld(rig_id: int, usb_num: int):
+def start_rigctld(rig_id: int, usb_num: int, port: int):
     rigctld_bin = (
         PROJECT_ROOT / "external" / "hamlib" / "build" / "tests" / "rigctld"
     )
@@ -40,7 +40,7 @@ def start_rigctld(rig_id: int, usb_num: int):
         "-r",
         f"/dev/ttyUSB{usb_num}",
         "-t",
-        "4531",
+        str(port),
     ]
     logging.info("Starting rigctld: %s", " ".join(cmd))
     return subprocess.Popen(cmd)
@@ -103,7 +103,11 @@ def main():
     direwolf_proc = start_direwolf()
     rigctld_proc = None
     if rig_cfg.get("enabled", True):
-        rigctld_proc = start_rigctld(args.rig_id, args.usb_num)
+        rigctld_proc = start_rigctld(
+            args.rig_id,
+            args.usb_num,
+            rig_cfg.get("port", config.RIGCTLD_PORT),
+        )
     else:
         logging.info("rigctld disabled in configuration")
     eco_server, eco_thread = start_ecowitt_listener()

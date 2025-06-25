@@ -58,3 +58,5 @@ enabled = yes
 rig_id = 1
 # USB device number for /dev/ttyUSB{usb_num}
 usb_num = 0
+# TCP port for rigctld (must match PTT RIG port in direwolf.conf)
+port = 4534
