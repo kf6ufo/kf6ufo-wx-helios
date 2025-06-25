@@ -22,6 +22,12 @@ The project will expand to include several related components:
 - `wx-heliox solar-power controller` and `wx-heliox solar-power controller telemetry`
 - `wx-heliox solar-panels` and `wx-heliox solar-panels telemetry`
 
+## Supported weather stations
+
+This project receives weather data via the **Ecowitt** protocol. The integration
+has only been tested with an **Ecowitt HP2551 Wi-Fi** station, but any weather
+station that speaks the same protocol should also work.
+
 ## Features
 
 - APRS position and telemetry embedded in a human-readable comment
