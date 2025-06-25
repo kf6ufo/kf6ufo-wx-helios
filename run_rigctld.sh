@@ -1,5 +1,5 @@
 #!/bin/bash
-# Start rigctld with the specified rig model and serial adapter
+# Start the system rigctld with the specified rig model and serial adapter
 
 set -e
 
@@ -35,10 +35,5 @@ if [ "$ENABLED" != "yes" ]; then
 fi
 
 RIGCTLD="rigctld"
-if [ -x "external/hamlib/build/rigctld" ]; then
-    RIGCTLD="external/hamlib/build/rigctld"
-elif [ -x "external/hamlib/build/src/rigctld" ]; then
-    RIGCTLD="external/hamlib/build/src/rigctld"
-fi
 
 exec "$RIGCTLD" -m "$RIG_ID" -r "/dev/ttyUSB${USB_NUM}" -t 4531

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build external submodules (Direwolf and Hamlib) without installing
+# Build external submodules (currently only Direwolf) without installing
 
 set -e
 
@@ -15,5 +15,4 @@ build_module() {
     cd ../../..
 }
 
-build_module external/hamlib
 build_module external/direwolf
