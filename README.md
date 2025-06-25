@@ -46,7 +46,7 @@ station that speaks the same protocol should also work.
 
 ## Building wx-helios-direwolf
 
-This repository includes the [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon using the helper script:
+This repository includes the [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon using the helper script. The script automatically pulls the latest Direwolf sources from GitHub:
 
 ```bash
 ./build_direwolf.sh
@@ -61,6 +61,7 @@ Build it with the helper script:
 ```bash
 ./build_hamlib.sh
 ```
+The script automatically pulls the latest hamlib sources from GitHub before building.
 
 ## Running wx-helios-direwolf
 

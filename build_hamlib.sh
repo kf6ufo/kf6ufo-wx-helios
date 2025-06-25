@@ -3,10 +3,8 @@
 
 set -e
 
-# Initialize submodule if needed
-if [ ! -d "external/hamlib" ] || [ ! -d "external/hamlib/.git" ]; then
-    git submodule update --init external/hamlib
-fi
+# Retrieve or update the hamlib source from GitHub
+git submodule update --init --remote external/hamlib
 
 cd external/hamlib
 mkdir -p build
