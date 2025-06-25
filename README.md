@@ -57,8 +57,10 @@ The file contains APRS beacon details, Ecowitt listener settings and radio
 parameters. Each service can be disabled with an ``enabled`` option:
 ``[ECOWITT]/enabled`` for the listener, ``[HUBTELEMETRY]/enabled`` for the
 telemetry beacon, ``[DIREWOLF]/enabled`` for the TNC and ``[RIG]/enabled`` for
-``rigctld``. The ``[RIG]`` section also provides ``rig_id`` and ``usb_num`` for
-``rigctld``; the template defaults to ``rig_id = 1`` for the Hamlib dummy radio.
+``rigctld``. The ``[RIG]`` section also provides ``rig_id``, ``usb_num`` and
+``port`` for ``rigctld``; the template defaults to ``rig_id = 1`` for the
+Hamlib dummy radio. The ``port`` option must match the ``PTT RIG`` port in
+``direwolf.conf`` and is used by ``main.py`` when launching ``rigctld``.
 Install the dependencies with:
 
 ```bash

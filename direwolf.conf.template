@@ -7,7 +7,7 @@ ADEVICE plughw:1,0
 CHANNEL 0
 MYCALL NOCALL-0
 MODEM 1200
-PTT RIG 2 localhost:4534
+PTT RIG 2 localhost:4534   # must match [RIG]/port in wx-helios.conf
 
 # Virtual TNC Server
 AGWPORT 8000
