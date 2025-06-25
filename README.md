@@ -73,9 +73,7 @@ time it logs data.
 ## Running kf6ufo-wx-helios
 
 `main.py` starts all services at once. It reads the rig model and USB number
-from ``wx-helios.conf`` by default. Command-line options ``--rig-id`` and
-``--usb-num`` override the configuration if needed. The telemetry beacon runs
-every hour until the program is stopped.
+from ``wx-helios.conf`` by default.
 
 The provided ``run.sh`` script launches ``main.py`` with a Python interpreter
 from a local virtual environment if one exists, falling back to ``python3``
