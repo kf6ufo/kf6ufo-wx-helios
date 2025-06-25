@@ -1,7 +1,11 @@
 #!/bin/bash
-# Build external submodules (Direwolf and Hamlib) without installing
+# Build external submodules (Direwolf and Hamlib)
 
 set -e
+
+# Absolute path to the project root
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+mkdir -p "$ROOT_DIR/bin"
 
 # Ensure autoconf, automake and libtool are available
 ensure_autotools() {
@@ -29,8 +33,21 @@ build_hamlib() {
     ./bootstrap
     mkdir -p build
     cd build
-    ../configure
+
+    local prefix="$ROOT_DIR/bin"
+
+    # First build with debug CFLAGS
+    ../configure CFLAGS="-g -O0"
     make -j"$(nproc)"
+    make install
+
+    # Reconfigure to install binaries to the local bin directory
+    make distclean || true
+    ../configure --prefix="$prefix"
+    make -j"$(nproc)"
+    make check
+    make install
+
     cd ../../..
 }
 
