@@ -34,4 +34,11 @@ if [ "$ENABLED" != "yes" ]; then
     exit 0
 fi
 
-exec rigctld -m "$RIG_ID" -r "/dev/ttyUSB${USB_NUM}" -t 4531
+RIGCTLD="rigctld"
+if [ -x "external/hamlib/build/rigctld" ]; then
+    RIGCTLD="external/hamlib/build/rigctld"
+elif [ -x "external/hamlib/build/src/rigctld" ]; then
+    RIGCTLD="external/hamlib/build/src/rigctld"
+fi
+
+exec "$RIGCTLD" -m "$RIG_ID" -r "/dev/ttyUSB${USB_NUM}" -t 4531

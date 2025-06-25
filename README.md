@@ -52,6 +52,16 @@ This repository includes the [wx-helios-direwolf](https://github.com/kf6ufo/wx-h
 ./build_direwolf.sh
 ```
 
+## Building wx-helios-hamlib
+
+To provide the `rigctld` daemon, this repository includes the
+[wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodule.
+Build it with the helper script:
+
+```bash
+./build_hamlib.sh
+```
+
 ## Running wx-helios-direwolf
 
 Start the Direwolf TNC with the helper script:
@@ -76,6 +86,9 @@ configuration file:
 # or
 ./run_rigctld.sh
 ```
+
+If the `wx-helios-hamlib` submodule has been built, the script will use the
+local `rigctld` binary automatically.
 
 For example, to start model `503` on `/dev/ttyUSB0`:
 
