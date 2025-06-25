@@ -34,7 +34,9 @@ station that speaks the same protocol should also work.
 - Configuration via an INI file
 - Works with the Direwolf KISS interface
 - Portable across hardware platforms
-- Proven symbol handling, beacon loop and telemetry extraction
+- Reliable symbol handling with a simple beacon loop for telemetry extraction
+- Weather-station integration via the Ecowitt protocol
+- Runtime directory with `wxnow.txt` holding the latest APRS frame
 
 ## Requirements
 
@@ -71,7 +73,7 @@ and the `/dev/ttyUSB` device number:
 ./run_rigctld.sh <rig-id> <usb-num>
 ```
 
-For example to start model `503` on `/dev/ttyUSB0`:
+For example, to start model `503` on `/dev/ttyUSB0`:
 
 ```bash
 ./run_rigctld.sh 503 0
