@@ -38,19 +38,7 @@ The project will expand to include several related components:
 
 ## Building ws-helios-direwolf
 
-This repository includes the [ws-helios-direwolf](https://github.com/kf0tke/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon:
-
-```bash
-
-git submodule update --init
-cd external/direwolf
-mkdir build && cd build
-cmake ..
-make -j4
-sudo make install
-```
-
-Or run the helper script from the repository root to perform the above steps automatically:
+This repository includes the [ws-helios-direwolf](https://github.com/kf0tke/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon using the helper script:
 
 ```bash
 ./build_direwolf.sh
