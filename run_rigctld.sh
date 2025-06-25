@@ -24,4 +24,14 @@ else
     usage
 fi
 
+ENABLED=$(python3 - <<'EOF'
+import config
+print("yes" if config.load_rig_config().get("enabled", True) else "no")
+EOF
+)
+if [ "$ENABLED" != "yes" ]; then
+    echo "rigctld disabled in configuration" >&2
+    exit 0
+fi
+
 exec rigctld -m "$RIG_ID" -r "/dev/ttyUSB${USB_NUM}" -t 4531

@@ -14,6 +14,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 
 
 def start_direwolf():
+    cfg = config.load_direwolf_config()
+    if not cfg.get("enabled", True):
+        logging.info("Direwolf disabled in configuration")
+        return None
     conf = PROJECT_ROOT / "direwolf.conf"
     if not conf.exists():
         shutil.copy(PROJECT_ROOT / "direwolf.conf.template", conf)
@@ -95,7 +99,11 @@ def main():
     )
 
     direwolf_proc = start_direwolf()
-    rigctld_proc = start_rigctld(args.rig_id, args.usb_num)
+    rigctld_proc = None
+    if rig_cfg.get("enabled", True):
+        rigctld_proc = start_rigctld(args.rig_id, args.usb_num)
+    else:
+        logging.info("rigctld disabled in configuration")
     eco_server, eco_thread = start_ecowitt_listener()
 
     running = True
@@ -122,9 +130,11 @@ def main():
             eco_server.shutdown()
             eco_thread.join()
         for proc in (direwolf_proc, rigctld_proc):
-            proc.terminate()
+            if proc:
+                proc.terminate()
         for proc in (direwolf_proc, rigctld_proc):
-            proc.wait()
+            if proc:
+                proc.wait()
 
 
 if __name__ == "__main__":
