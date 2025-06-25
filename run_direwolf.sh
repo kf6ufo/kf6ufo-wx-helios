@@ -4,11 +4,16 @@
 set -e
 
 CONF="direwolf.conf"
+RUNTIME_DIR="runtime"
+WXNOW="$RUNTIME_DIR/wxnow.txt"
 
 # If the local configuration doesn't exist, create it from the template
 if [ ! -f "$CONF" ]; then
     cp direwolf.conf.template "$CONF"
 fi
 
-# Run Direwolf with the configuration and log to direwolf.log
-exec direwolf -c "$CONF" -l direwolf.log
+# Ensure runtime directory exists for wxnow file
+mkdir -p "$RUNTIME_DIR"
+
+# Run Direwolf with the configuration, wxnow file and log to direwolf.log
+exec direwolf -c "$CONF" -l direwolf.log -w "$WXNOW"

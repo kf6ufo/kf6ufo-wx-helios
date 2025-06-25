@@ -64,8 +64,9 @@ Start the Direwolf TNC with the helper script:
 ./run_direwolf.sh
 ```
 
-This uses `direwolf.conf` (copied from the template if missing) and writes
-logs to `direwolf.log`.
+This uses `direwolf.conf` (copied from the template if missing), ensures the
+`runtime/` directory exists and passes `runtime/wxnow.txt` to Direwolf using the
+`-w` option. Logs are written to `direwolf.log`.
 
 ## Running rigctld
 
