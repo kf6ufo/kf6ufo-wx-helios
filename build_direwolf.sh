@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build and install the wx-helios-direwolf submodule
+# Build the wx-helios-direwolf submodule without installing
 
 set -e
 
@@ -13,5 +13,4 @@ mkdir -p build
 cd build
 cmake ..
 make -j$(nproc)
-sudo make install
 
