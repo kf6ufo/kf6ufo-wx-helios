@@ -1,4 +1,4 @@
-# KF0TKE APRS Telemetry Beacon
+# KF6UFO wx‑helios
 
 A simple APRS telemetry beacon intended for Raspberry Pi and other small computers. This repository forms the core of the **wx‑helios** project—a solar‑powered APRS weather and telemetry suite for amateur radio.
 
@@ -42,9 +42,9 @@ station that speaks the same protocol should also work.
 - Python 3.x
 - Python dependencies listed in `requirements.txt` (install with `pip install -r requirements.txt`)
 
-## Building ws-helios-direwolf
+## Building wx-helios-direwolf
 
-This repository includes the [ws-helios-direwolf](https://github.com/kf0tke/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon using the helper script:
+This repository includes the [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon using the helper script:
 
 ```bash
 ./build_direwolf.sh
