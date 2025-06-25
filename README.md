@@ -103,6 +103,18 @@ Scripts create writable files under `runtime/` in the project root. For example,
 `ecowitt-listener.py` writes the latest APRS frame to `runtime/wxnow.txt` each
 time it logs data.
 
+## Combined launcher
+
+`main.py` starts all services at once. Pass the rig model and USB number just as
+you would to `run_rigctld.sh`. The telemetry beacon runs every hour until the
+program is stopped.
+
+```bash
+python3 main.py <rig-id> <usb-num>
+```
+
+Use `--telemetry-interval` to change the beacon period if needed.
+
 ## License
 
 This project is licensed under the GNU General Public License version 2. See [LICENSE](LICENSE) for details.
