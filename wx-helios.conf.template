@@ -46,3 +46,9 @@ lon = 10854.32W
 [HUBTELEMETRY]
 # Enable or disable the telemetry beacon
 enabled = yes
+
+[RIG]
+# Rig model ID for rigctld
+rig_id = 503
+# USB device number for /dev/ttyUSB{usb_num}
+usb_num = 0

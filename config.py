@@ -54,3 +54,17 @@ def load_hubtelemetry_config():
         return {"enabled": True}
     hub = cfg[section]
     return {"enabled": hub.getboolean("enabled", True)}
+
+
+def load_rig_config():
+    cfg = _get_config()
+    section = "RIG"
+    if section not in cfg:
+        return {}
+    rig = cfg[section]
+    result = {}
+    if "rig_id" in rig:
+        result["rig_id"] = int(rig.get("rig_id", 0))
+    if "usb_num" in rig:
+        result["usb_num"] = int(rig.get("usb_num", 0))
+    return result
