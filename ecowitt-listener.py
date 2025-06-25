@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from collections import deque
 from pathlib import Path
 import logging
@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 def write_wxnow(frame):
-    now = datetime.utcnow().strftime("%b %d %Y %H:%M\n")
+    now = datetime.now(timezone.utc).strftime("%b %d %Y %H:%M\n")
     with open(WXNOW, "w") as f:
         f.write(now)
         f.write(frame + "\n")
@@ -85,7 +85,7 @@ def ecowitt_to_aprs(p):
     bp = clamp(int(round(press_in * 33.8639 * 10)), 0, 19999)
 
     # timestamp + assemble
-    ts = datetime.utcnow().strftime("%d%H%M")
+    ts = datetime.now(timezone.utc).strftime("%d%H%M")
     return (f"@{ts}z{POS_BLOCK}"
             f"{wd:03d}/{ws:02d}g{wg:03d}"
             f"{t_field}"
