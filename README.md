@@ -58,7 +58,8 @@ parameters. Each service can be disabled with an ``enabled`` option:
 ``[ECOWITT]/enabled`` for the listener, ``[HUBTELEMETRY]/enabled`` for the
 telemetry beacon, ``[DIREWOLF]/enabled`` for the TNC and ``[RIG]/enabled`` for
 ``rigctld``. The ``[RIG]`` section also provides ``rig_id`` and ``usb_num`` for
-``rigctld``. Install the dependencies with:
+``rigctld``; the template defaults to ``rig_id = 1`` for the Hamlib dummy radio.
+Install the dependencies with:
 
 ```bash
 pip install -r requirements.txt
