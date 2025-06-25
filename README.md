@@ -67,16 +67,26 @@ This uses `direwolf.conf` (copied from the template if missing), ensures the
 ## Running rigctld
 
 Launch `rigctld` for radio control with the helper script. Pass the rig model ID
-and the `/dev/ttyUSB` device number:
+and the `/dev/ttyUSB` device number, or omit both to use the values from the
+configuration file:
 
 ```bash
 ./run_rigctld.sh <rig-id> <usb-num>
+# or
+./run_rigctld.sh
 ```
 
 For example, to start model `503` on `/dev/ttyUSB0`:
 
 ```bash
 ./run_rigctld.sh 503 0
+```
+
+If ``wx-helios.conf`` contains a ``[RIG]`` section with ``rig_id`` and
+``usb_num`` set, you can simply run:
+
+```bash
+./run_rigctld.sh
 ```
 
 
@@ -91,10 +101,12 @@ cp wx-helios.conf.template wx-helios.conf
 Telemetry sequence counters are no longer used, so the previous
 `[TELEMETRY]/sequence_file` option has been removed.
 
-The file contains APRS beacon details and Ecowitt listener settings. Two
-boolean options control whether the Ecowitt listener and telemetry beacon run
-at all: ``[ECOWITT]/enabled`` and ``[HUBTELEMETRY]/enabled``. Set them to ``no``
-to disable the corresponding service. Install the dependencies with:
+The file contains APRS beacon details, Ecowitt listener settings and radio
+parameters. Two boolean options control whether the Ecowitt listener and
+telemetry beacon run at all: ``[ECOWITT]/enabled`` and ``[HUBTELEMETRY]/enabled``.
+Set them to ``no`` to disable the corresponding service. The ``[RIG]`` section
+provides ``rig_id`` and ``usb_num`` for ``rigctld``. Install the dependencies
+with:
 
 ```bash
 pip install -r requirements.txt
@@ -108,12 +120,13 @@ time it logs data.
 
 ## Combined launcher
 
-`main.py` starts all services at once. Pass the rig model and USB number just as
-you would to `run_rigctld.sh`. The telemetry beacon runs every hour until the
-program is stopped.
+`main.py` starts all services at once. It reads the rig model and USB number
+from ``wx-helios.conf`` by default. Command-line options ``--rig-id`` and
+``--usb-num`` override the configuration if needed. The telemetry beacon runs
+every hour until the program is stopped.
 
 ```bash
-python3 main.py <rig-id> <usb-num>
+python3 main.py
 ```
 
 Use `--telemetry-interval` to change the beacon period if needed.
