@@ -51,6 +51,16 @@ lon = 10854.32W
 # Enable or disable the telemetry beacon
 enabled = yes
 
+[DAEMONS]
+# Comma-separated list of daemon modules to launch
+enabled = yes
+modules = daemons.ecowitt_listener
+
+[TELEMETRY]
+# Comma-separated list of telemetry modules to run periodically
+enabled = yes
+modules = telemetry.hubTelemetry
+
 [RIG]
 # Enable or disable rigctld
 enabled = yes

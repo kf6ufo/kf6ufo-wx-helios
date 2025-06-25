@@ -6,7 +6,7 @@ import pytest
 # depends on it at import time.
 pytest.importorskip("psutil")
 
-import hubTelemetry
+import telemetry.hubTelemetry as hubTelemetry
 
 class DummySocket:
     def __init__(self):
