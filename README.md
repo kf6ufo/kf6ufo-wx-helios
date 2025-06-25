@@ -63,11 +63,23 @@ provide per-module options. ``[DIREWOLF]/enabled`` controls the TNC and
 ``rig_id = 1`` for the Hamlib dummy radio. The ``port`` option must match the
 ``PTT RIG`` port in ``direwolf.conf`` and is used by ``main.py`` when launching
 ``rigctld``.
-Install the dependencies with:
+
+### Python virtual environment
+
+Create and activate a local environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install the dependencies inside this environment:
 
 ```bash
 pip install -r requirements.txt
 ```
+
+The `run.sh` script automatically uses this environment.
 
 ## Running kf6ufo-wx-helios
 
