@@ -30,12 +30,11 @@ This repository includes the
 [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
 [wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
 to provide the Direwolf TNC and the `rigctld` daemon. Simply run the helper
-script to fetch the latest sources, install the build requirements and compile
-both projects. Hamlib is built first so Direwolf can detect the libraries. The
-script installs GNU autotools if needed, runs Hamlib's `./bootstrap` to create
-the `configure` script and installs everything under the project root. Headers
-end up in `include/hamlib`, libraries under `lib/` and `rigctld` in `bin/` so
-`main.py` can run it directly. Direwolf is built with CMake:
+script to fetch the latest sources and compile both projects. Hamlib is built
+first so Direwolf can detect the libraries. The script installs GNU autotools
+if needed and runs Hamlib's `./bootstrap` to create the `configure` script.
+The resulting `rigctld` binary is left inside
+`external/hamlib/build/tests/` and Direwolf is built with CMake:
 
 ```bash
 ./build_external.sh
