@@ -33,8 +33,9 @@ to provide the Direwolf TNC and the `rigctld` daemon. Simply run the helper
 script to fetch the latest sources, install the build requirements and compile
 both projects. Hamlib is built first so Direwolf can detect the libraries. The
 script installs GNU autotools if needed, runs Hamlib's `./bootstrap` to create
-the `configure` script and installs `rigctld` to `bin/` so `main.py` can run it
-directly. Direwolf is built with CMake:
+the `configure` script and installs everything under the project root. Headers
+end up in `include/hamlib`, libraries under `lib/` and `rigctld` in `bin/` so
+`main.py` can run it directly. Direwolf is built with CMake:
 
 ```bash
 ./build_external.sh
