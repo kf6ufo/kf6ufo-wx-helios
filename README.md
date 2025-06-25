@@ -19,8 +19,8 @@ The project will expand to include several related components:
 - `weather station` support (currently HP2551 Wi‑Fi Weather) with APRS reports and telemetry
 - `wx-helios controller` and `wx-helios controller telemetry`
 - `wx-helios transceiver` and `wx-helios transceiver telemetry`
-- `wx-heliox solar-power controller` and `wx-heliox solar-power controller telemetry`
-- `wx-heliox solar-panels` and `wx-heliox solar-panels telemetry`
+- `wx-helios solar-power controller` and `wx-helios solar-power controller telemetry`
+- `wx-helios solar-panels` and `wx-helios solar-panels telemetry`
 
 ## Supported weather stations
 
