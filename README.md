@@ -44,24 +44,17 @@ station that speaks the same protocol should also work.
 - Python 3.x
 - Python dependencies listed in `requirements.txt` (install with `pip install -r requirements.txt`)
 
-## Building wx-helios-direwolf
+## Building external components
 
-This repository includes the [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) subproject used to provide the Direwolf TNC. Build it before running the telemetry beacon using the helper script. The script automatically pulls the latest Direwolf sources from GitHub:
-
-```bash
-./build_direwolf.sh
-```
-
-## Building wx-helios-hamlib
-
-To provide the `rigctld` daemon, this repository includes the
-[wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodule.
-Build it with the helper script:
+This repository includes the
+[wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
+[wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
+to provide the Direwolf TNC and the `rigctld` daemon. Build both with the helper
+script, which automatically pulls the latest sources from GitHub:
 
 ```bash
-./build_hamlib.sh
+./build_external.sh
 ```
-The script automatically pulls the latest hamlib sources from GitHub before building.
 
 ## Running wx-helios-direwolf
 
