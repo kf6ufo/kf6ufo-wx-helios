@@ -4,6 +4,7 @@ import socket
 import time
 import config
 import argparse
+import sys
 
 # Parse callsign with optional SSID
 def parse_callsign(full_call):
@@ -231,6 +232,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="APRS Telemetry Beacon")
     parser.add_argument('--debug', action='store_true', help='Enable debug mode (no transmit)')
     args = parser.parse_args()
+
+    tele_cfg = config.load_hubtelemetry_config()
+    if not tele_cfg.get("enabled", True):
+        if args.debug:
+            print("hubTelemetry disabled in configuration")
+        sys.exit(0)
 
     callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()
     if args.debug:

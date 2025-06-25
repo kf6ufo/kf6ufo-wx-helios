@@ -31,6 +31,8 @@ destination = APZ001
 version = v5
 
 [ECOWITT]
+# Enable or disable the Ecowitt listener
+enabled = yes
 # HTTP listener port
 port = 8080
 
@@ -40,3 +42,7 @@ path = /data/report
 # Position block for wxnow.txt
 lat = 3742.12N
 lon = 10854.32W
+
+[HUBTELEMETRY]
+# Enable or disable the telemetry beacon
+enabled = yes

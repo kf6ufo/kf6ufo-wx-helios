@@ -6,9 +6,11 @@ from collections import deque
 from pathlib import Path
 import logging
 import time
+import sys
 import config
 
 cfg = config.load_ecowitt_config()
+ENABLED = cfg.get("enabled", True)
 PORT = cfg.get("port", 8080)
 PATH = cfg.get("path", "/data/report")
 RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
@@ -137,5 +139,8 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 if __name__ == "__main__":
+    if not ENABLED:
+        logger.info("Ecowitt listener disabled in configuration")
+        sys.exit(0)
     logger.info("Listening on 0.0.0.0:%s%s", PORT, PATH)
     HTTPServer(("", PORT), Handler).serve_forever()

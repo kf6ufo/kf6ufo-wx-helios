@@ -8,6 +8,7 @@ from pathlib import Path
 import threading
 import shutil
 import importlib.util
+import config
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -40,6 +41,11 @@ def start_rigctld(rig_id: int, usb_num: int):
 
 
 def start_ecowitt_listener():
+    cfg = config.load_ecowitt_config()
+    if not cfg.get("enabled", True):
+        logging.info("Ecowitt listener disabled in configuration")
+        return None, None
+
     spec = importlib.util.spec_from_file_location(
         "ecowitt_listener", PROJECT_ROOT / "ecowitt-listener.py"
     )
@@ -54,6 +60,10 @@ def start_ecowitt_listener():
 
 
 def run_hubtelemetry():
+    cfg = config.load_hubtelemetry_config()
+    if not cfg.get("enabled", True):
+        logging.info("hubTelemetry disabled in configuration")
+        return
     logging.info("Running hubTelemetry.py")
     subprocess.run([sys.executable, str(PROJECT_ROOT / "hubTelemetry.py")])
 
@@ -100,8 +110,9 @@ def main():
                 sleep_left -= 1
     finally:
         logging.info("Shutting down")
-        eco_server.shutdown()
-        eco_thread.join()
+        if eco_server is not None:
+            eco_server.shutdown()
+            eco_thread.join()
         for proc in (direwolf_proc, rigctld_proc):
             proc.terminate()
         for proc in (direwolf_proc, rigctld_proc):
