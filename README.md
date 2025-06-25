@@ -47,10 +47,11 @@ previously used to start these services have been removed.
 
 ## Configuration
 
-Copy the template and edit the values for your station:
+Copy the templates and edit the values for your station:
 
 ```bash
 cp wx-helios.conf.template wx-helios.conf
+cp direwolf.conf.template direwolf.conf
 ```
 
 The file contains APRS beacon details, Ecowitt listener settings and radio
@@ -66,12 +67,6 @@ Install the dependencies with:
 ```bash
 pip install -r requirements.txt
 ```
-
-## Runtime directory
-
-Scripts create writable files under `runtime/` in the project root. For example,
-`ecowitt-listener.py` writes the latest APRS frame to `runtime/wxnow.txt` each
-time it logs data.
 
 ## Running kf6ufo-wx-helios
 
