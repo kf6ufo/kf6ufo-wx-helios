@@ -16,4 +16,4 @@ fi
 mkdir -p "$RUNTIME_DIR"
 
 # Run Direwolf with the configuration, wxnow file and log to direwolf.log
-exec direwolf -c "$CONF" -l direwolf.log -w "$WXNOW"
+exec "$(dirname "$0")/external/direwolf/build/src/direwolf" -c "$CONF" -l direwolf.log -w "$WXNOW"
