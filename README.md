@@ -49,8 +49,15 @@ station that speaks the same protocol should also work.
 This repository includes the
 [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
 [wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
-to provide the Direwolf TNC and the `rigctld` daemon. Build both with the helper
-script, which automatically pulls the latest sources from GitHub. Hamlib is
+to provide the Direwolf TNC and the `rigctld` daemon. After cloning, fetch the
+submodules with:
+
+```bash
+git submodule update --init --recursive
+```
+
+Then build both components with the helper script, which automatically pulls
+the latest sources from GitHub. Hamlib is
 built first so Direwolf can detect the libraries:
 
 ```bash
