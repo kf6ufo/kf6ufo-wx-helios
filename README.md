@@ -47,11 +47,9 @@ station that speaks the same protocol should also work.
 ## Building external components
 
 This repository includes the
-[wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
-[wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
-to provide the Direwolf TNC and the `rigctld` daemon. Build both with the helper
-script, which automatically pulls the latest sources from GitHub. Hamlib is
-built first so Direwolf can detect the libraries:
+[wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) submodule
+used to provide the Direwolf TNC. Build it with the helper script, which
+automatically pulls the latest sources from GitHub:
 
 ```bash
 ./build_external.sh
@@ -82,8 +80,7 @@ configuration file:
 ./run_rigctld.sh
 ```
 
-If the `wx-helios-hamlib` submodule has been built, the script will use the
-local `rigctld` binary automatically.
+The script uses the system `rigctld` binary by default.
 
 For example, to start model `503` on `/dev/ttyUSB0`:
 
