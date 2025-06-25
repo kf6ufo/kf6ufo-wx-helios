@@ -13,16 +13,17 @@ The same Python code can be deployed on three target platforms:
 
 ## Supported weather stations
 
-This project receives weather data via the **Ecowitt** protocol. The integration
+This project currently only receives weather data via the **Ecowitt** protocol. The integration
 has only been tested with an **Ecowitt HP2551 Wi-Fi** station, but any weather
-station that speaks the same protocol should also work.
+station that speaks the same protocol should also work.  A daemon architecture supports
+other protocols, but currently there is only the **Ecowitt** daemon/listener.
 
 
 ## Requirements
 
 - Debian / Ubuntu / Raspberry Pi OS
 - Python 3.x
-- Python dependencies listed in `requirements.txt` (install with `pip install -r requirements.txt`)
+- Python dependencies listed in `requirements.txt` (install into venv with `pip install -r requirements.txt`)
 
 ## Building external components
 
@@ -81,8 +82,7 @@ The `run.sh` script automatically uses this environment.
 
 ## Running kf6ufo-wx-helios
 
-`main.py` starts all services at once. It reads the rig model and USB number
-from ``wx-helios.conf`` by default.
+`main.py` starts all the services and daemons, then schedules telemetry runs. 
 
 The provided ``run.sh`` script launches ``main.py`` with a Python interpreter
 from a local virtual environment if one exists, falling back to ``python3``
