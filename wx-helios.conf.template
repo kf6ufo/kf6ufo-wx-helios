@@ -1,0 +1,42 @@
+# wx-helios.conf.template
+# Combined configuration for wx-helios.
+# Copy this file to "wx-helios.conf" and edit the values for your station.
+
+[APRS]
+# Your callsign-SSID (replace NOCALL-10 with your real callsign)
+callsign = NOCALL-10
+
+# Latitude in decimal degrees (positive for North, negative for South)
+latitude = 10.0
+
+# Longitude in decimal degrees (positive for East, negative for West)
+longitude = -100.0
+
+# Symbol table selector: primary or secondary
+# 'primary'   -> uses '/'
+# 'secondary' -> uses '\\'
+symbol_table = secondary
+
+# APRS map symbol (case sensitive)
+symbol = Y
+
+# Digipeater path
+path = WIDE1-1,WIDE2-1
+
+# APRS destination field
+# Use APZ001 for custom experimental software
+destination = APZ001
+
+# Optional software version string
+version = v5
+
+[ECOWITT]
+# HTTP listener port
+port = 8080
+
+# URL path for uploads
+path = /data/report
+
+# Position block for wxnow.txt
+lat = 3742.12N
+lon = 10854.32W

@@ -85,10 +85,10 @@ For example, to start model `503` on `/dev/ttyUSB0`:
 Copy the template and edit the values for your station:
 
 ```bash
-cp hubTelemetry.conf.template hubTelemetry.conf
+cp wx-helios.conf.template wx-helios.conf
 ```
 
-Set callsign, coordinates, symbol table, path and destination. Install the dependencies with:
+The file contains APRS beacon details and Ecowitt listener settings. Install the dependencies with:
 
 ```bash
 pip install -r requirements.txt

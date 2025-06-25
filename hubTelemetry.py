@@ -2,36 +2,8 @@
 import psutil
 import socket
 import time
-import configparser
+import config
 import argparse
-
-# Load configuration from file
-def load_config():
-    """Read APRS settings from ``hubTelemetry.conf``.
-
-    Returns
-    -------
-    tuple
-        Tuple containing ``(callsign, latitude, longitude, symbol_table, symbol,
-        path, destination, version)``.
-    """
-    config = configparser.ConfigParser()
-    config.read("hubTelemetry.conf")
-    callsign = config["APRS"]["callsign"]
-    latitude = float(config["APRS"]["latitude"])
-    longitude = float(config["APRS"]["longitude"])
-    symbol_table_raw = config["APRS"]["symbol_table"].strip().lower()
-    if symbol_table_raw == "primary":
-        symbol_table = '/'
-    elif symbol_table_raw == "secondary":
-        symbol_table = '\\'
-    else:
-        symbol_table = '/'
-    symbol = config["APRS"]["symbol"]
-    path = [x.strip() for x in config["APRS"]["path"].split(",")]
-    destination = config["APRS"]["destination"]
-    version = config["APRS"].get("version", "v5")
-    return callsign, latitude, longitude, symbol_table, symbol, path, destination, version
 
 # Parse callsign with optional SSID
 def parse_callsign(full_call):
@@ -260,7 +232,7 @@ if __name__ == "__main__":
     parser.add_argument('--debug', action='store_true', help='Enable debug mode (no transmit)')
     args = parser.parse_args()
 
-    callsign, latitude, longitude, symbol_table, symbol, path, destination, version = load_config()
+    callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()
     if args.debug:
         print("Config Loaded:")
         print(f"callsign={callsign}, lat={latitude}, lon={longitude}, symbol_table={symbol_table}, symbol={symbol}, path={path}, dest={destination}, version={version}")
