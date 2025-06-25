@@ -1,3 +1,6 @@
 [submodule "external/direwolf"]
 path = external/direwolf
 url = https://github.com/kf6ufo/wx-helios-direwolf.git
+[submodule "external/hamlib"]
+path = external/hamlib
+url = https://github.com/kf6ufo/wx-helios-hamlib.git
