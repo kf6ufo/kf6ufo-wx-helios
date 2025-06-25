@@ -56,13 +56,22 @@ def load_hubtelemetry_config():
     return {"enabled": hub.getboolean("enabled", True)}
 
 
+def load_direwolf_config():
+    cfg = _get_config()
+    section = "DIREWOLF"
+    if section not in cfg:
+        return {"enabled": True}
+    dw = cfg[section]
+    return {"enabled": dw.getboolean("enabled", True)}
+
+
 def load_rig_config():
     cfg = _get_config()
     section = "RIG"
     if section not in cfg:
-        return {}
+        return {"enabled": True}
     rig = cfg[section]
-    result = {}
+    result = {"enabled": rig.getboolean("enabled", True)}
     if "rig_id" in rig:
         result["rig_id"] = int(rig.get("rig_id", 0))
     if "usb_num" in rig:

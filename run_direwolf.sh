@@ -7,6 +7,16 @@ CONF="direwolf.conf"
 RUNTIME_DIR="runtime"
 WXNOW="$RUNTIME_DIR/wxnow.txt"
 
+ENABLED=$(python3 - <<'EOF'
+import config
+print("yes" if config.load_direwolf_config().get("enabled", True) else "no")
+EOF
+)
+if [ "$ENABLED" != "yes" ]; then
+    echo "Direwolf disabled in configuration" >&2
+    exit 0
+fi
+
 # If the local configuration doesn't exist, create it from the template
 if [ ! -f "$CONF" ]; then
     cp direwolf.conf.template "$CONF"

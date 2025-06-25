@@ -63,6 +63,7 @@ Start the Direwolf TNC with the helper script:
 This uses `direwolf.conf` (copied from the template if missing), ensures the
 `runtime/` directory exists and passes `runtime/wxnow.txt` to Direwolf using the
 `-w` option. Logs are written to `direwolf.log`.
+Set `[DIREWOLF]/enabled` to `no` in `wx-helios.conf` to skip starting Direwolf.
 
 ## Running rigctld
 
@@ -88,6 +89,7 @@ If ``wx-helios.conf`` contains a ``[RIG]`` section with ``rig_id`` and
 ```bash
 ./run_rigctld.sh
 ```
+Set `[RIG]/enabled` to `no` to disable launching ``rigctld``.
 
 
 ## Configuration
@@ -102,11 +104,11 @@ Telemetry sequence counters are no longer used, so the previous
 `[TELEMETRY]/sequence_file` option has been removed.
 
 The file contains APRS beacon details, Ecowitt listener settings and radio
-parameters. Two boolean options control whether the Ecowitt listener and
-telemetry beacon run at all: ``[ECOWITT]/enabled`` and ``[HUBTELEMETRY]/enabled``.
-Set them to ``no`` to disable the corresponding service. The ``[RIG]`` section
-provides ``rig_id`` and ``usb_num`` for ``rigctld``. Install the dependencies
-with:
+parameters. Each service can be disabled with an ``enabled`` option:
+``[ECOWITT]/enabled`` for the listener, ``[HUBTELEMETRY]/enabled`` for the
+telemetry beacon, ``[DIREWOLF]/enabled`` for the TNC and ``[RIG]/enabled`` for
+``rigctld``. The ``[RIG]`` section also provides ``rig_id`` and ``usb_num`` for
+``rigctld``. Install the dependencies with:
 
 ```bash
 pip install -r requirements.txt

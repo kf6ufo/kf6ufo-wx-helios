@@ -30,6 +30,10 @@ destination = APZ001
 # Optional software version string
 version = v5
 
+[DIREWOLF]
+# Enable or disable the Direwolf TNC
+enabled = yes
+
 [ECOWITT]
 # Enable or disable the Ecowitt listener
 enabled = yes
@@ -48,6 +52,8 @@ lon = 10854.32W
 enabled = yes
 
 [RIG]
+# Enable or disable rigctld
+enabled = yes
 # Rig model ID for rigctld
 rig_id = 503
 # USB device number for /dev/ttyUSB{usb_num}
