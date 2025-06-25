@@ -96,7 +96,7 @@ def get_laptop_telemetry():
         temps = psutil.sensors_temperatures()
         if 'coretemp' in temps:
             cpu_temp = temps['coretemp'][0].current
-    except:
+    except Exception:
         cpu_temp = 0.0
 
     cpu_load = psutil.cpu_percent(interval=1)
