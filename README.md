@@ -66,47 +66,9 @@ the libraries. The script installs GNU autotools if needed, runs Hamlib's
 ./build_external.sh
 ```
 
-## Running wx-helios-direwolf
-
-Start the Direwolf TNC with the helper script:
-
-```bash
-./run_direwolf.sh
-```
-
-This uses `direwolf.conf` (copied from the template if missing), ensures the
-`runtime/` directory exists and passes `runtime/wxnow.txt` to Direwolf using the
-`-w` option. Logs are written to `direwolf.log`.
-Set `[DIREWOLF]/enabled` to `no` in `wx-helios.conf` to skip starting Direwolf.
-
-## Running rigctld
-
-Launch `rigctld` for radio control with the helper script. Pass the rig model ID
-and the `/dev/ttyUSB` device number, or omit both to use the values from the
-configuration file:
-
-```bash
-./run_rigctld.sh <rig-id> <usb-num>
-# or
-./run_rigctld.sh
-```
-
-If the `wx-helios-hamlib` submodule has been built, the script will use the
-local `rigctld` binary automatically.
-
-For example, to start model `503` on `/dev/ttyUSB0`:
-
-```bash
-./run_rigctld.sh 503 0
-```
-
-If ``wx-helios.conf`` contains a ``[RIG]`` section with ``rig_id`` and
-``usb_num`` set, you can simply run:
-
-```bash
-./run_rigctld.sh
-```
-Set `[RIG]/enabled` to `no` to disable launching ``rigctld``.
+After building, `main.py` will automatically launch Direwolf and `rigctld`
+whenever they are enabled in ``wx-helios.conf``. The separate helper scripts
+previously used to start these services have been removed.
 
 
 ## Configuration
