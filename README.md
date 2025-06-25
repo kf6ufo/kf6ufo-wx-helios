@@ -58,9 +58,9 @@ git submodule update --init --recursive
 
 Then build both components with the helper script, which automatically pulls
 the latest sources from GitHub. Hamlib is built first so Direwolf can detect
-the libraries. The script runs Hamlib's `./bootstrap` to create the
-`configure` script, invokes the traditional `configure` build and uses CMake
-for Direwolf:
+the libraries. The script installs GNU autotools if needed, runs Hamlib's
+`./bootstrap` to create the `configure` script, invokes the traditional
+`configure` build and uses CMake for Direwolf:
 
 ```bash
 ./build_external.sh
