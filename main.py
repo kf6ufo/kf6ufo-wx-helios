@@ -23,9 +23,8 @@ def start_direwolf():
         shutil.copy(PROJECT_ROOT / "direwolf.conf.template", conf)
     runtime_dir = PROJECT_ROOT / "runtime"
     runtime_dir.mkdir(exist_ok=True)
-    wxnow = runtime_dir / "wxnow.txt"
     direwolf_bin = PROJECT_ROOT / "external" / "direwolf" / "build" / "src" / "direwolf"
-    cmd = [str(direwolf_bin), "-c", str(conf), "-l", "direwolf.log", "-w", str(wxnow)]
+    cmd = [str(direwolf_bin), "-c", str(conf), "-l", "direwolf.log"]
     logging.info("Starting Direwolf: %s", " ".join(cmd))
     return subprocess.Popen(cmd)
 
