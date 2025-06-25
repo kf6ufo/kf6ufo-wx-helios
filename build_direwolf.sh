@@ -3,10 +3,8 @@
 
 set -e
 
-# Initialize submodule if needed
-if [ ! -d "external/direwolf" ] || [ ! -d "external/direwolf/.git" ]; then
-    git submodule update --init external/direwolf
-fi
+# Retrieve or update the Direwolf source from GitHub
+git submodule update --init --remote external/direwolf
 
 cd external/direwolf
 mkdir -p build
