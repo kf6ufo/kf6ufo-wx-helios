@@ -6,12 +6,14 @@ from collections import deque
 from pathlib import Path
 import logging
 import time
+import config
 
-PORT = 8080
-PATH = "/data/report"
+cfg = config.load_ecowitt_config()
+PORT = cfg.get("port", 8080)
+PATH = cfg.get("path", "/data/report")
 RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
-LAT = "3742.12N"    # exactly 8 chars
-LON = "10854.32W"   # exactly 9 chars
+LAT = cfg.get("lat", "3742.12N")    # exactly 8 chars
+LON = cfg.get("lon", "10854.32W")   # exactly 9 chars
 POS_BLOCK = f"{LAT}/{LON}_"
 # directories
 PROJECT_ROOT = Path(__file__).resolve().parent
