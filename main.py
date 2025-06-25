@@ -31,8 +31,9 @@ def start_direwolf():
 
 
 def start_rigctld(rig_id: int, usb_num: int):
+    rigctld_bin = PROJECT_ROOT / "bin" / "rigctld"
     cmd = [
-        "rigctld",
+        str(rigctld_bin),
         "-m",
         str(rig_id),
         "-r",
