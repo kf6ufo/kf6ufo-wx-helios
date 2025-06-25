@@ -10,17 +10,6 @@ The same Python code can be deployed on three target platforms:
 2. **Production** – a quality build using the DigiRig interface, a Yaesu FT‑65R handheld, and a Raspberry Pi 4.
 3. **Cheapest** – the lowest‑cost option with a USB audio dongle, a simple PTT circuit, a Baofeng radio, and (if possible) a Raspberry Pi 3.
 
-## Repository modules
-
-The project will expand to include several related components:
-
-- `wx-helios-direwolf` and `wx-helios-direwolf telemetry`
-- `wx-helios repeater` and `wx-helios repeater telemetry`
-- `weather station` support (currently HP2551 Wi‑Fi Weather) with APRS reports and telemetry
-- `wx-helios controller` and `wx-helios controller telemetry`
-- `wx-helios transceiver` and `wx-helios transceiver telemetry`
-- `wx-helios solar-power controller` and `wx-helios solar-power controller telemetry`
-- `wx-helios solar-panels` and `wx-helios solar-panels telemetry`
 
 ## Supported weather stations
 
@@ -28,15 +17,6 @@ This project receives weather data via the **Ecowitt** protocol. The integration
 has only been tested with an **Ecowitt HP2551 Wi-Fi** station, but any weather
 station that speaks the same protocol should also work.
 
-## Features
-
-- APRS position and telemetry embedded in a human-readable comment
-- Configuration via an INI file
-- Works with the Direwolf KISS interface
-- Portable across hardware platforms
-- Reliable symbol handling with a simple beacon loop for telemetry extraction
-- Weather-station integration via the Ecowitt protocol
-- Runtime directory with `wxnow.txt` holding the latest APRS frame
 
 ## Requirements
 
@@ -73,9 +53,6 @@ Copy the template and edit the values for your station:
 cp wx-helios.conf.template wx-helios.conf
 ```
 
-Telemetry sequence counters are no longer used, so the previous
-`[TELEMETRY]/sequence_file` option has been removed.
-
 The file contains APRS beacon details, Ecowitt listener settings and radio
 parameters. Each service can be disabled with an ``enabled`` option:
 ``[ECOWITT]/enabled`` for the listener, ``[HUBTELEMETRY]/enabled`` for the
@@ -93,7 +70,7 @@ Scripts create writable files under `runtime/` in the project root. For example,
 `ecowitt-listener.py` writes the latest APRS frame to `runtime/wxnow.txt` each
 time it logs data.
 
-## Combined launcher
+## Running kf6ufo-wx-helios
 
 `main.py` starts all services at once. It reads the rig model and USB number
 from ``wx-helios.conf`` by default. Command-line options ``--rig-id`` and
