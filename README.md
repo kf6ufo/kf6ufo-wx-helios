@@ -100,8 +100,12 @@ from ``wx-helios.conf`` by default. Command-line options ``--rig-id`` and
 ``--usb-num`` override the configuration if needed. The telemetry beacon runs
 every hour until the program is stopped.
 
+The provided ``run.sh`` script launches ``main.py`` with a Python interpreter
+from a local virtual environment if one exists, falling back to ``python3``
+otherwise. Simply execute:
+
 ```bash
-python3 main.py
+./run.sh
 ```
 
 ## License
