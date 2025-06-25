@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+from datetime import datetime, timedelta
 import pytest
 
 MODULE_PATH = Path(__file__).resolve().parent.parent / "ecowitt-listener.py"
@@ -35,20 +36,18 @@ def test_temperature_field(temp, expected):
     assert expected in frame
 
 def test_update_rain_24h_accumulation_and_cleanup():
+    """Verify 24‑h totals over a simulated 48‑h period."""
     mod = load_module()
     mod.RAIN_CACHE.clear()
-    p1 = {"dateutc": "2020-01-01 01:10:00", "hourlyrainin": "0.10"}
-    assert mod.update_rain_24h(p1) == 10
-    assert len(mod.RAIN_CACHE) == 1
 
-    p2 = {"dateutc": "2020-01-01 02:00:00", "hourlyrainin": "0.20"}
-    assert mod.update_rain_24h(p2) == 30
-    assert len(mod.RAIN_CACHE) == 2
-
-    p3 = {"dateutc": "2020-01-02 02:00:00", "hourlyrainin": "0.05"}
-    val = mod.update_rain_24h(p3)
-    assert len(mod.RAIN_CACHE) == 2
-    assert val == int(round((0.20 + 0.05) * 100))
+    start = datetime(2020, 1, 1, 0, 0, 0)
+    for i in range(48):
+        ts = (start + timedelta(hours=i)).strftime("%Y-%m-%d %H:%M:%S")
+        p = {"dateutc": ts, "hourlyrainin": "0.10"}
+        val = mod.update_rain_24h(p)
+        hours = min(i + 1, 24)
+        assert len(mod.RAIN_CACHE) == hours
+        assert val == hours * 10
 
 def test_update_rain_24h_same_hour_replaces():
     mod = load_module()
