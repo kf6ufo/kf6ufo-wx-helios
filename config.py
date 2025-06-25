@@ -60,6 +60,27 @@ def load_hubtelemetry_config():
     return {"enabled": hub.getboolean("enabled", True)}
 
 
+def _load_module_list(section, default):
+    cfg = _get_config()
+    if section not in cfg:
+        return default
+    sec = cfg[section]
+    if not sec.getboolean("enabled", True):
+        return []
+    modules = [m.strip() for m in sec.get("modules", ",".join(default)).split(",") if m.strip()]
+    return modules
+
+
+def load_daemon_modules():
+    """Return list of enabled daemon module names."""
+    return _load_module_list("DAEMONS", ["daemons.ecowitt_listener"])
+
+
+def load_telemetry_modules():
+    """Return list of enabled telemetry module names."""
+    return _load_module_list("TELEMETRY", ["telemetry.hubTelemetry"])
+
+
 def load_direwolf_config():
     cfg = _get_config()
     section = "DIREWOLF"

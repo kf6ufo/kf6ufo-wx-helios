@@ -228,10 +228,11 @@ def send_via_kiss(ax25_frame):
         s.send(kiss_frame)
 
 # Main logic
-if __name__ == "__main__":
+def main(argv=None):
+    """Entry point for running the telemetry beacon."""
     parser = argparse.ArgumentParser(description="APRS Telemetry Beacon")
     parser.add_argument('--debug', action='store_true', help='Enable debug mode (no transmit)')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     tele_cfg = config.load_hubtelemetry_config()
     if not tele_cfg.get("enabled", True):
@@ -261,4 +262,8 @@ if __name__ == "__main__":
 
     if not args.debug:
         send_via_kiss(ax25_frame)
+
+
+if __name__ == "__main__":
+    main()
 

@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import pytest
 
-MODULE_PATH = Path(__file__).resolve().parent.parent / "ecowitt-listener.py"
+MODULE_PATH = Path(__file__).resolve().parent.parent / "daemons" / "ecowitt_listener.py"
 
 def load_module():
     spec = importlib.util.spec_from_file_location("ecowitt_listener", MODULE_PATH)

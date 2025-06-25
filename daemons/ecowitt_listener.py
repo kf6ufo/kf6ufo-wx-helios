@@ -7,6 +7,7 @@ from pathlib import Path
 import logging
 import time
 import sys
+import threading
 import config
 
 cfg = config.load_ecowitt_config()
@@ -18,16 +19,18 @@ LAT = cfg.get("lat", "3742.12N")    # exactly 8 chars
 LON = cfg.get("lon", "10854.32W")   # exactly 9 chars
 POS_BLOCK = f"{LAT}/{LON}_"
 # directories
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RUNTIME_DIR = PROJECT_ROOT / "runtime"
 RUNTIME_DIR.mkdir(exist_ok=True)
 WXNOW = RUNTIME_DIR / "wxnow.txt"
 
 # configure logging to use UTC timestamps
 logging.Formatter.converter = time.gmtime
-logging.basicConfig(level=logging.INFO,
-                    format='[%(asctime)s UTC] %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s UTC] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 logger = logging.getLogger(__name__)
 
@@ -138,9 +141,30 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_):  # silence default logging
         pass
 
-if __name__ == "__main__":
+def start():
+    """Start the HTTP listener in a background thread.
+
+    Returns
+    -------
+    tuple
+        ``(server, thread)`` if enabled, otherwise ``(None, None)``.
+    """
     if not ENABLED:
         logger.info("Ecowitt listener disabled in configuration")
-        sys.exit(0)
+        return None, None
+
+    server = HTTPServer(("", PORT), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
     logger.info("Listening on 0.0.0.0:%s%s", PORT, PATH)
-    HTTPServer(("", PORT), Handler).serve_forever()
+    return server, thread
+
+
+if __name__ == "__main__":
+    srv, th = start()
+    if srv and th:
+        try:
+            th.join()
+        except KeyboardInterrupt:
+            srv.shutdown()
+            th.join()

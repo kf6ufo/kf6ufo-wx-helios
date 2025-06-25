@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 import threading
 import shutil
-import importlib.util
+import importlib
 import config
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -46,32 +46,32 @@ def start_rigctld(rig_id: int, usb_num: int, port: int):
     return subprocess.Popen(cmd)
 
 
-def start_ecowitt_listener():
-    cfg = config.load_ecowitt_config()
-    if not cfg.get("enabled", True):
-        logging.info("Ecowitt listener disabled in configuration")
-        return None, None
-
-    spec = importlib.util.spec_from_file_location(
-        "ecowitt_listener", PROJECT_ROOT / "ecowitt-listener.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    server = module.HTTPServer(("", module.PORT), module.Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    logging.info("Ecowitt listener running on port %s", module.PORT)
-    return server, thread
+def start_daemon_modules():
+    """Start daemon modules listed in the configuration."""
+    daemons = []
+    for name in config.load_daemon_modules():
+        try:
+            logging.info("Starting daemon %s", name)
+            module = importlib.import_module(name)
+            if hasattr(module, "start"):
+                server, thread = module.start()
+                if server:
+                    daemons.append((server, thread))
+        except Exception as exc:
+            logging.exception("Failed to start daemon %s: %s", name, exc)
+    return daemons
 
 
-def run_hubtelemetry():
-    cfg = config.load_hubtelemetry_config()
-    if not cfg.get("enabled", True):
-        logging.info("hubTelemetry disabled in configuration")
-        return
-    logging.info("Running hubTelemetry.py")
-    subprocess.run([sys.executable, str(PROJECT_ROOT / "hubTelemetry.py")])
+def run_telemetry_modules():
+    """Execute all telemetry modules sequentially."""
+    for name in config.load_telemetry_modules():
+        try:
+            logging.info("Running telemetry %s", name)
+            subprocess.run([sys.executable, "-m", name])
+        except Exception as exc:
+            logging.exception("Telemetry module %s failed: %s", name, exc)
+
+
 
 
 def main():
@@ -110,7 +110,8 @@ def main():
         )
     else:
         logging.info("rigctld disabled in configuration")
-    eco_server, eco_thread = start_ecowitt_listener()
+
+    daemon_instances = start_daemon_modules()
 
     running = True
 
@@ -124,7 +125,7 @@ def main():
     try:
         while running:
             start_time = time.time()
-            run_hubtelemetry()
+            run_telemetry_modules()
             elapsed = time.time() - start_time
             sleep_left = args.telemetry_interval - elapsed
             while running and sleep_left > 0:
@@ -132,9 +133,9 @@ def main():
                 sleep_left -= 1
     finally:
         logging.info("Shutting down")
-        if eco_server is not None:
-            eco_server.shutdown()
-            eco_thread.join()
+        for server, thread in daemon_instances:
+            server.shutdown()
+            thread.join()
         for proc in (direwolf_proc, rigctld_proc):
             if proc:
                 proc.terminate()
