@@ -8,6 +8,7 @@ build_hamlib() {
     local path="external/hamlib"
     git submodule update --init --remote "$path"
     cd "$path"
+    ./bootstrap
     mkdir -p build
     cd build
     ../configure
