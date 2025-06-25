@@ -49,18 +49,12 @@ station that speaks the same protocol should also work.
 This repository includes the
 [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
 [wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
-to provide the Direwolf TNC and the `rigctld` daemon. After cloning, fetch the
-submodules with:
-
-```bash
-git submodule update --init --recursive
-```
-
-Then build both components with the helper script, which automatically pulls
-the latest sources from GitHub. Hamlib is built first so Direwolf can detect
-the libraries. The script installs GNU autotools if needed, runs Hamlib's
-`./bootstrap` to create the `configure` script, invokes the traditional
-`configure` build and uses CMake for Direwolf:
+to provide the Direwolf TNC and the `rigctld` daemon. Simply run the helper
+script to fetch the latest sources, install the build requirements and compile
+both projects. Hamlib is built first so Direwolf can detect the libraries. The
+script installs GNU autotools if needed, runs Hamlib's `./bootstrap` to create
+the `configure` script, invokes the traditional `configure` build and uses
+CMake for Direwolf:
 
 ```bash
 ./build_external.sh
@@ -109,8 +103,6 @@ every hour until the program is stopped.
 ```bash
 python3 main.py
 ```
-
-Use `--telemetry-interval` to change the beacon period if needed.
 
 ## License
 
