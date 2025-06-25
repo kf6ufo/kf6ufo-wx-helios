@@ -1,5 +1,11 @@
 import unittest
 from unittest.mock import patch
+import pytest
+
+# Skip these tests entirely if psutil isn't available since hubTelemetry
+# depends on it at import time.
+pytest.importorskip("psutil")
+
 import hubTelemetry
 
 class DummySocket:
