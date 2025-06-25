@@ -88,6 +88,9 @@ Copy the template and edit the values for your station:
 cp wx-helios.conf.template wx-helios.conf
 ```
 
+Telemetry sequence counters are no longer used, so the previous
+`[TELEMETRY]/sequence_file` option has been removed.
+
 The file contains APRS beacon details and Ecowitt listener settings. Install the dependencies with:
 
 ```bash
