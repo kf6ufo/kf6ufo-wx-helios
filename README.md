@@ -54,9 +54,7 @@ for more options in handling PTT.
 If ``rigctld`` is enabled, be sure that the ``Direwolf`` port for ``rigctld`` is the same
 as is configured for ``rigctld`` in ``wx-helios,conf``
 
-Telemetry modules can be scheduled individually using cron syntax.  Add a
-``[TELEMETRY_SCHEDULES]`` section to ``wx-helios.conf`` mapping module names to
-their schedule expressions:
+Telemetry modules can be scheduled individually using cron syntax.  
 
 ```ini
 [TELEMETRY_SCHEDULES]
@@ -67,10 +65,9 @@ telemetry.hub_telemetry = 0 * * * *
 
 ## Running kf6ufo-wx-helios
 
-`main.py` starts all the services and daemons, then schedules telemetry runs. 
-
 The provided ``run.sh`` script ensures the ``.venv`` environment exists,
-installs dependencies if necessary, activates it and then launches ``main.py`` using that interpreter.
+installs dependencies if necessary, activates the ``.venv`` and then launches ``main.py`` using that interpreter.
+`main.py` starts all the services and daemons, then schedules telemetry runs. 
 Simply execute:
 
 ```bash
