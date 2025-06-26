@@ -14,11 +14,11 @@ other protocols, but currently there is only the **Ecowitt** daemon/listener.
 
 - Debian / Ubuntu / Raspberry Pi OS
 - Python 3.x
-- Python dependencies listed in `requirements.txt` (install into `.venv` with `pip install -r requirements.txt` or simply run `./run.sh`)
+- Python dependencies listed in `requirements.txt` are loaded automatically into a python venv by ``run.sh``
 
 ## Hardware platforms
 
-The same Python code can be deployed on three target platforms:
+The same Python code can be deployed on at least three target platforms:
 
 1. **Radio/Computer** – a generic setup for testing or casual use on any amateur station.
 2. **Production** – a quality build using the DigiRig interface, a Yaesu FT‑65R handheld, and a Raspberry Pi 4.
