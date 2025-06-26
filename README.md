@@ -1,6 +1,6 @@
 # KF6UFO wx‑helios
 
-A simple APRS telemetry beacon intended for Raspberry Pi and other small computers. This repository forms the core of the **wx‑helios** project—a solar‑powered APRS weather and telemetry suite for amateur radio.
+A simple APRS telemetry beacon intended for small computers and Raspberry Pi. This repository forms the core of the **wx‑helios** project—a solar‑powered APRS weather and telemetry suite for amateur radio.
 
 ## Hardware platforms
 
@@ -30,20 +30,14 @@ other protocols, but currently there is only the **Ecowitt** daemon/listener.
 This repository includes the
 [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
 [wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
-to provide the Direwolf TNC and the `rigctld` daemon. Simply run the helper
+to provide the Direwolf TNC and the `rigctld` daemon. Simply run the build
 script to fetch the latest sources and compile both projects. Hamlib is built
-first so Direwolf can detect the libraries. The script installs GNU autotools
-if needed and runs Hamlib's `./bootstrap` to create the `configure` script.
-The resulting `rigctld` binary is left inside
-`external/hamlib/build/tests/` and Direwolf is built with CMake using our
-locally built Hamlib via `-DHAMLIB_ROOT_DIR`:
+first so Direwolf can detect the libraries and use the correct ``rigctld``.
 
 ```bash
 ./build_external.sh
 ```
 
-After building, `main.py` will automatically launch Direwolf and `rigctld`
-whenever they are enabled in ``wx-helios.conf``.
 
 ## Configuration
 
@@ -54,33 +48,12 @@ cp wx-helios.conf.template wx-helios.conf
 cp direwolf.conf.template direwolf.conf
 ```
 
-The file contains APRS beacon details, Ecowitt listener settings and radio
-parameters. Services are enabled via ``[DAEMONS]`` and ``[TELEMETRY]`` lists of
-module names. Existing sections such as ``[ECOWITT]`` and ``[HUBTELEMETRY]``
-provide per-module options. ``[DIREWOLF]/enabled`` controls the TNC and
-``[RIG]/enabled`` controls ``rigctld``. The ``[RIG]`` section also provides
-``rig_id``, ``usb_num`` and ``port`` for ``rigctld``; the template defaults to
-``rig_id = 1`` for the Hamlib dummy radio. The ``port`` option must match the
-``PTT RIG`` port in ``direwolf.conf`` and is used by ``main.py`` when launching
-``rigctld``.
+The files contains configuration settings for the ``Direwolf TNC`` and **kf6ufo-wx-helios**.
+``Direwolf`` can be used by itself to handle PTT on the radio, or ``rigctld`` is included
+for more options in handling PTT.
+If ``rigctld`` is enabled, be sure that the ``Direwolf`` port for ``rigctld`` is the same
+as is configured for ``rigctld`` in ``wx-helios,conf``
 
-### Python virtual environment
-
-Create and activate a local environment:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Install the dependencies inside this environment:
-
-```bash
-pip install -r requirements.txt
-```
-
-The `run.sh` script automatically sets up, activates and uses this environment.
-If one doesn't exist it creates `.venv` and installs the requirements.
 
 ## Running kf6ufo-wx-helios
 
