@@ -59,3 +59,19 @@ def test_update_rain_24h_same_hour_replaces():
     p2 = {"dateutc": "2020-01-01 01:50:00", "hourlyrainin": "0.20"}
     assert mod.update_rain_24h(p2) == 20
     assert len(mod.RAIN_CACHE) == 1
+
+
+@pytest.mark.parametrize("lat,lon,expected_lat,expected_lon", [
+    (37.5, 122.25, "3730.00N", "12215.00E"),
+    (-37.5, 122.25, "3730.00S", "12215.00E"),
+    (37.5, -122.25, "3730.00N", "12215.00W"),
+    (-37.5, -122.25, "3730.00S", "12215.00W"),
+    (0, 0, "0000.00N", "00000.00E"),
+    (-0.1, -0.1, "0006.00S", "00006.00W"),
+    (12.3456, -98.7654, "1220.74N", "09845.92W"),
+])
+def test_format_lat_lon(lat, lon, expected_lat, expected_lon):
+    mod = load_module()
+    result_lat, result_lon = mod.format_lat_lon(lat, lon)
+    assert result_lat == expected_lat
+    assert result_lon == expected_lon
