@@ -60,6 +60,13 @@ modules = daemons.ecowitt_listener
 enabled = yes
 modules = telemetry.hub_telemetry
 
+[TELEMETRY_SCHEDULES]
+# Cron expressions for individual telemetry modules
+# Run hub telemetry at the top of each hour
+telemetry.hub_telemetry = 0 * * * *
+# Example: run another module every 15 minutes
+#other.module = */15 * * * *
+
 [RIG]
 # Enable or disable rigctld
 enabled = yes

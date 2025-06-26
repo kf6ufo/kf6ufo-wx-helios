@@ -9,6 +9,7 @@ import threading
 import shutil
 import importlib
 import config
+from croniter import croniter
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -62,14 +63,13 @@ def start_daemon_modules():
     return daemons
 
 
-def run_telemetry_modules():
-    """Execute all telemetry modules sequentially."""
-    for name in config.load_telemetry_modules():
-        try:
-            logging.info("Running telemetry %s", name)
-            subprocess.run([sys.executable, "-m", name])
-        except Exception as exc:
-            logging.exception("Telemetry module %s failed: %s", name, exc)
+def run_telemetry_module(name: str):
+    """Execute a single telemetry module."""
+    try:
+        logging.info("Running telemetry %s", name)
+        subprocess.run([sys.executable, "-m", name])
+    except Exception as exc:
+        logging.exception("Telemetry module %s failed: %s", name, exc)
 
 
 
@@ -113,6 +113,21 @@ def main():
 
     daemon_instances = start_daemon_modules()
 
+    telemetry_modules = config.load_telemetry_modules()
+    telemetry_schedules = config.load_telemetry_schedules()
+    cron_map = {}
+    next_times = {}
+    now = time.time()
+    for name in telemetry_modules:
+        expr = telemetry_schedules.get(name)
+        if expr:
+            itr = croniter(expr, now)
+            cron_map[name] = itr
+            next_times[name] = itr.get_next(float)
+        else:
+            cron_map[name] = None
+            next_times[name] = now + args.telemetry_interval
+
     running = True
 
     def shutdown(signum, frame):
@@ -124,10 +139,17 @@ def main():
 
     try:
         while running:
-            start_time = time.time()
-            run_telemetry_modules()
-            elapsed = time.time() - start_time
-            sleep_left = args.telemetry_interval - elapsed
+            now = time.time()
+            for name in telemetry_modules:
+                if now >= next_times[name]:
+                    run_telemetry_module(name)
+                    if cron_map[name]:
+                        next_times[name] = cron_map[name].get_next(float)
+                    else:
+                        next_times[name] = now + args.telemetry_interval
+
+            next_event = min(next_times.values())
+            sleep_left = next_event - time.time()
             while running and sleep_left > 0:
                 time.sleep(min(1, sleep_left))
                 sleep_left -= 1

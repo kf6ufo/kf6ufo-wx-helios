@@ -27,3 +27,20 @@ def test_daemons_custom(tmp_path, monkeypatch):
 def test_telemetry_custom(tmp_path, monkeypatch):
     write_config(tmp_path, "[TELEMETRY]\nmodules = t1, t2\n", monkeypatch)
     assert config.load_telemetry_modules() == ["t1", "t2"]
+
+
+def test_telemetry_schedules_default(tmp_path, monkeypatch):
+    write_config(tmp_path, "", monkeypatch)
+    assert config.load_telemetry_schedules() == {}
+
+
+def test_telemetry_schedules_values(tmp_path, monkeypatch):
+    write_config(
+        tmp_path,
+        "[TELEMETRY_SCHEDULES]\nfoo = 0 * * * *\nbar = */5 * * * *\n",
+        monkeypatch,
+    )
+    assert config.load_telemetry_schedules() == {
+        "foo": "0 * * * *",
+        "bar": "*/5 * * * *",
+    }
