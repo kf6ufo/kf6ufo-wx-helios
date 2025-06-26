@@ -23,7 +23,7 @@ other protocols, but currently there is only the **Ecowitt** daemon/listener.
 
 - Debian / Ubuntu / Raspberry Pi OS
 - Python 3.x
-- Python dependencies listed in `requirements.txt` (install into venv with `pip install -r requirements.txt`)
+- Python dependencies listed in `requirements.txt` (install into `.venv` with `pip install -r requirements.txt` or simply run `./run.sh`)
 
 ## Building external components
 
@@ -79,15 +79,16 @@ Install the dependencies inside this environment:
 pip install -r requirements.txt
 ```
 
-The `run.sh` script automatically uses this environment.
+The `run.sh` script automatically sets up, activates and uses this environment.
+If one doesn't exist it creates `.venv` and installs the requirements.
 
 ## Running kf6ufo-wx-helios
 
 `main.py` starts all the services and daemons, then schedules telemetry runs. 
 
-The provided ``run.sh`` script launches ``main.py`` with a Python interpreter
-from a local virtual environment if one exists, falling back to ``python3``
-otherwise. Simply execute:
+The provided ``run.sh`` script ensures the ``.venv`` environment exists,
+installs dependencies if necessary, activates it and then launches ``main.py`` using that interpreter.
+Simply execute:
 
 ```bash
 ./run.sh
