@@ -24,6 +24,14 @@ def send_via_kiss(ax25_frame):
     None
         This function sends data over the network and does not return anything.
     """
+    try:
+        from daemons import kiss_client
+        if getattr(kiss_client, "ENABLED", False) and hasattr(kiss_client, "FRAME_QUEUE"):
+            kiss_client.FRAME_QUEUE.put(ax25_frame)
+            return
+    except Exception:
+        pass
+
     escaped = bytearray()
     for b in ax25_frame:
         if b == 0xC0:
