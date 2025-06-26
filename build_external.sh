@@ -49,7 +49,8 @@ build_direwolf() {
     cd "$path"
     mkdir -p build
     cd build
-    cmake ..
+    local hamlib_root="$ROOT_DIR/external/hamlib/build"
+    cmake .. -DHAMLIB_ROOT_DIR="$hamlib_root"
     make -j"$(nproc)"
     cd ../../..
 }

@@ -35,7 +35,8 @@ script to fetch the latest sources and compile both projects. Hamlib is built
 first so Direwolf can detect the libraries. The script installs GNU autotools
 if needed and runs Hamlib's `./bootstrap` to create the `configure` script.
 The resulting `rigctld` binary is left inside
-`external/hamlib/build/tests/` and Direwolf is built with CMake:
+`external/hamlib/build/tests/` and Direwolf is built with CMake using our
+locally built Hamlib via `-DHAMLIB_ROOT_DIR`:
 
 ```bash
 ./build_external.sh
