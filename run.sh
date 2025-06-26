@@ -5,14 +5,16 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Prefer local virtual environment if present
-if [ -x "$SCRIPT_DIR/venv/bin/python" ]; then
-    PYTHON="$SCRIPT_DIR/venv/bin/python"
-elif [ -x "$SCRIPT_DIR/.venv/bin/python" ]; then
-    PYTHON="$SCRIPT_DIR/.venv/bin/python"
-else
-    PYTHON="$(command -v python3)"
+VENV_DIR="$SCRIPT_DIR/.venv"
+
+# Create the environment if needed and install dependencies
+if [ ! -x "$VENV_DIR/bin/python" ]; then
+    python3 -m venv "$VENV_DIR"
+    "$VENV_DIR/bin/python" -m pip install -r "$SCRIPT_DIR/requirements.txt"
 fi
 
-exec "$PYTHON" "$SCRIPT_DIR/main.py" "$@"
+# Activate the environment so any subprocesses use its tools
+source "$VENV_DIR/bin/activate"
+
+exec python "$SCRIPT_DIR/main.py" "$@"
 
