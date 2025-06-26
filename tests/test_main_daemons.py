@@ -63,7 +63,18 @@ def test_main_start_and_shutdown(monkeypatch):
     monkeypatch.setattr(main, "start_daemon_modules", fake_start_daemon_modules)
     monkeypatch.setattr(main, "start_direwolf", lambda: DummyProc())
     monkeypatch.setattr(main, "start_rigctld", lambda *a, **k: DummyProc())
-    monkeypatch.setattr(main, "run_telemetry_modules", lambda: (_ for _ in ()).throw(KeyboardInterrupt()))
+    current = 0
+
+    def fake_time():
+        nonlocal current
+        val = current
+        current += 1
+        return val
+
+    monkeypatch.setattr(main.time, "time", fake_time)
+    monkeypatch.setattr(main, "run_telemetry_module", lambda name: (_ for _ in ()).throw(KeyboardInterrupt()))
+    monkeypatch.setattr(config, "load_telemetry_modules", lambda: ["dummy"])
+    monkeypatch.setattr(config, "load_telemetry_schedules", lambda: {})
     monkeypatch.setattr(main.signal, "signal", lambda *a, **k: None)
     monkeypatch.setattr(main.time, "sleep", lambda t: None)
     monkeypatch.setattr(logging, "basicConfig", lambda **k: None)
