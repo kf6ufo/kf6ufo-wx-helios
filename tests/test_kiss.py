@@ -2,11 +2,11 @@ import unittest
 from unittest.mock import patch
 import pytest
 
-# Skip these tests entirely if psutil isn't available since hubTelemetry
+# Skip these tests entirely if psutil isn't available since hub_telemetry
 # depends on it at import time.
 pytest.importorskip("psutil")
 
-import telemetry.hubTelemetry as hubTelemetry
+import telemetry.hub_telemetry as hub_telemetry
 
 class DummySocket:
     def __init__(self):
@@ -22,7 +22,7 @@ class TestKissEscaping(unittest.TestCase):
     def _run_send(self, payload):
         dummy = DummySocket()
         with patch('socket.create_connection', return_value=dummy):
-            hubTelemetry.send_via_kiss(payload)
+            hub_telemetry.send_via_kiss(payload)
         return dummy.sent
 
     def test_no_escape(self):

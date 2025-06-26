@@ -58,7 +58,7 @@ modules = daemons.ecowitt_listener
 [TELEMETRY]
 # Comma-separated list of telemetry modules to run periodically
 enabled = yes
-modules = telemetry.hubTelemetry
+modules = telemetry.hub_telemetry
 
 [RIG]
 # Enable or disable rigctld
