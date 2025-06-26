@@ -1,6 +1,20 @@
 # KF6UFO wx‑helios
 
-A simple APRS telemetry beacon intended for small computers and Raspberry Pi. This repository forms the core of the **wx‑helios** project—a solar‑powered APRS weather and telemetry suite for amateur radio.
+**wx‑helios** is a solar‑powered APRS weather and telemetry suite for amateur radio.  It employs a
+simple **Direwolf**-based APRS telemetry beacon intended for small computers and Raspberry Pi. 
+
+## Weather stations
+
+This project currently only receives weather data via the **Ecowitt** protocol. The integration
+has only been tested with an **Ecowitt HP2551 Wi-Fi** station, but any weather
+station that speaks the same protocol should also work.  A daemon architecture supports
+other protocols, but currently there is only the **Ecowitt** daemon/listener.
+
+## Requirements
+
+- Debian / Ubuntu / Raspberry Pi OS
+- Python 3.x
+- Python dependencies listed in `requirements.txt` (install into `.venv` with `pip install -r requirements.txt` or simply run `./run.sh`)
 
 ## Hardware platforms
 
@@ -9,21 +23,6 @@ The same Python code can be deployed on three target platforms:
 1. **Radio/Computer** – a generic setup for testing or casual use on any amateur station.
 2. **Production** – a quality build using the DigiRig interface, a Yaesu FT‑65R handheld, and a Raspberry Pi 4.
 3. **Cheapest** – the lowest‑cost option with a USB audio dongle, a simple PTT circuit, a Baofeng radio, and (if possible) a Raspberry Pi 3.
-
-
-## Supported weather stations
-
-This project currently only receives weather data via the **Ecowitt** protocol. The integration
-has only been tested with an **Ecowitt HP2551 Wi-Fi** station, but any weather
-station that speaks the same protocol should also work.  A daemon architecture supports
-other protocols, but currently there is only the **Ecowitt** daemon/listener.
-
-
-## Requirements
-
-- Debian / Ubuntu / Raspberry Pi OS
-- Python 3.x
-- Python dependencies listed in `requirements.txt` (install into `.venv` with `pip install -r requirements.txt` or simply run `./run.sh`)
 
 ## Building external components
 
@@ -37,7 +36,6 @@ first so Direwolf can detect the libraries and use the correct ``rigctld``.
 ```bash
 ./build_external.sh
 ```
-
 
 ## Configuration
 
@@ -61,7 +59,6 @@ Telemetry modules can be scheduled individually using cron syntax.
 telemetry.hub_telemetry = 0 * * * *
 #other.module = */15 * * * *
 ```
-
 
 ## Running kf6ufo-wx-helios
 
