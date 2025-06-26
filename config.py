@@ -77,6 +77,16 @@ def load_telemetry_modules():
     return _load_module_list("TELEMETRY", ["telemetry.hub_telemetry"])
 
 
+def load_telemetry_schedules():
+    """Return mapping of telemetry module names to cron expressions."""
+    cfg = _get_config()
+    section = "TELEMETRY_SCHEDULES"
+    if section not in cfg:
+        return {}
+    sec = cfg[section]
+    return {name: expr for name, expr in sec.items()}
+
+
 def load_direwolf_config():
     cfg = _get_config()
     section = "DIREWOLF"
