@@ -3,10 +3,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
 from datetime import datetime, timedelta, timezone
 from collections import deque
-from pathlib import Path
+from shared_functions import send_via_wxnow
 import logging
 import time
-import sys
 import threading
 import config
 
@@ -36,11 +35,6 @@ def format_lat_lon(lat, lon):
 
 LAT, LON = format_lat_lon(_lat_dd, _lon_dd)
 POS_BLOCK = f"{LAT}/{LON}_"
-# directories
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-RUNTIME_DIR = PROJECT_ROOT / "runtime"
-RUNTIME_DIR.mkdir(exist_ok=True)
-WXNOW = RUNTIME_DIR / "wxnow.txt"
 
 # configure logging to use UTC timestamps
 logging.Formatter.converter = time.gmtime
@@ -51,12 +45,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-def write_wxnow(frame):
-    now = datetime.now(timezone.utc).strftime("%b %d %Y %H:%M\n")
-    with open(WXNOW, "w") as f:
-        f.write(now)
-        f.write(frame + "\n")
 
 
 def update_rain_24h(post):
@@ -124,7 +112,7 @@ def log_params(client, params):
         logger.info("  %s: %s", k, params[k])
     frame = ecowitt_to_aprs(params)
     logger.info(frame)
-    write_wxnow(frame)
+    send_via_wxnow(frame)
 
 
 class Handler(BaseHTTPRequestHandler):
