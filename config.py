@@ -69,7 +69,10 @@ def _load_module_list(section, default):
 
 def load_daemon_modules():
     """Return list of enabled daemon module names."""
-    return _load_module_list("DAEMONS", ["daemons.ecowitt_listener"])
+    return _load_module_list(
+        "DAEMONS",
+        ["daemons.ecowitt_listener", "daemons.kiss_client"],
+    )
 
 
 def load_telemetry_modules():
@@ -94,6 +97,15 @@ def load_direwolf_config():
         return {"enabled": True}
     dw = cfg[section]
     return {"enabled": dw.getboolean("enabled", True)}
+
+
+def load_kiss_client_config():
+    cfg = _get_config()
+    section = "KISS_CLIENT"
+    if section not in cfg:
+        return {"enabled": True}
+    kc = cfg[section]
+    return {"enabled": kc.getboolean("enabled", True)}
 
 
 def load_rig_config():

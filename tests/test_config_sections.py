@@ -11,7 +11,10 @@ def write_config(tmp_path, text, monkeypatch):
 
 def test_daemons_default(tmp_path, monkeypatch):
     write_config(tmp_path, "", monkeypatch)
-    assert config.load_daemon_modules() == ["daemons.ecowitt_listener"]
+    assert config.load_daemon_modules() == [
+        "daemons.ecowitt_listener",
+        "daemons.kiss_client",
+    ]
 
 
 def test_daemons_disabled(tmp_path, monkeypatch):
