@@ -15,8 +15,25 @@ ENABLED = cfg.get("enabled", True)
 PORT = cfg.get("port", 8080)
 PATH = cfg.get("path", "/data/report")
 RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
-LAT = cfg.get("lat", "3742.12N")    # exactly 8 chars
-LON = cfg.get("lon", "10854.32W")   # exactly 9 chars
+
+try:
+    _callsign, _lat_dd, _lon_dd, *_ = config.load_aprs_config()
+except Exception:
+    _lat_dd = 0.0
+    _lon_dd = 0.0
+
+def _format_lat_lon(lat, lon):
+    ns = 'N' if lat >= 0 else 'S'
+    ew = 'E' if lon >= 0 else 'W'
+    lat_deg = int(abs(lat))
+    lat_min = (abs(lat) - lat_deg) * 60
+    lon_deg = int(abs(lon))
+    lon_min = (abs(lon) - lon_deg) * 60
+    lat_str = f"{lat_deg:02d}{lat_min:05.2f}{ns}"
+    lon_str = f"{lon_deg:03d}{lon_min:05.2f}{ew}"
+    return lat_str, lon_str
+
+LAT, LON = _format_lat_lon(_lat_dd, _lon_dd)
 POS_BLOCK = f"{LAT}/{LON}_"
 # directories
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

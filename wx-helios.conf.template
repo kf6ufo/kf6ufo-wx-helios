@@ -43,9 +43,8 @@ port = 8080
 # URL path for uploads
 path = /data/report
 
-# Position block for wxnow.txt
-lat = 3742.12N
-lon = 10854.32W
+# Ecowitt listener uses the station latitude and longitude from the APRS
+# section to generate the ``wxnow.txt`` position block.
 
 [HUBTELEMETRY]
 # Enable or disable the telemetry beacon
