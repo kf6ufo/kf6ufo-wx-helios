@@ -74,7 +74,7 @@ def load_daemon_modules():
 
 def load_telemetry_modules():
     """Return list of enabled telemetry module names."""
-    return _load_module_list("TELEMETRY", ["telemetry.hubTelemetry"])
+    return _load_module_list("TELEMETRY", ["telemetry.hub_telemetry"])
 
 
 def load_direwolf_config():

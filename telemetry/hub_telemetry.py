@@ -237,7 +237,7 @@ def main(argv=None):
     tele_cfg = config.load_hubtelemetry_config()
     if not tele_cfg.get("enabled", True):
         if args.debug:
-            print("hubTelemetry disabled in configuration")
+            print("hub_telemetry disabled in configuration")
         sys.exit(0)
 
     callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()

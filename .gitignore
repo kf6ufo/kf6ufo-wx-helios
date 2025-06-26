@@ -6,7 +6,7 @@ __pycache__/
 .pytest_cache/
 
 # Running conf file from template
-hubTelemetry.conf
+hub_telemetry.conf
 wx-helios.conf
 
 runtime/
