@@ -6,6 +6,7 @@ from pathlib import Path
 
 import config
 from telemetry import hub_telemetry
+from shared_functions import send_via_kiss
 
 LOG_PATH = Path(__file__).resolve().parent.parent / "direwolf.log"
 
@@ -91,7 +92,7 @@ def main(argv=None):
         print(info)
         print(frame.hex())
     else:
-        hub_telemetry.send_via_kiss(frame)
+        send_via_kiss(frame)
 
 
 if __name__ == "__main__":
