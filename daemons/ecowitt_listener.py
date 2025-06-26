@@ -22,7 +22,8 @@ except Exception:
     _lat_dd = 0.0
     _lon_dd = 0.0
 
-def _format_lat_lon(lat, lon):
+def format_lat_lon(lat, lon):
+    """Return APRS-formatted latitude and longitude strings."""
     ns = 'N' if lat >= 0 else 'S'
     ew = 'E' if lon >= 0 else 'W'
     lat_deg = int(abs(lat))
@@ -33,7 +34,7 @@ def _format_lat_lon(lat, lon):
     lon_str = f"{lon_deg:03d}{lon_min:05.2f}{ew}"
     return lat_str, lon_str
 
-LAT, LON = _format_lat_lon(_lat_dd, _lon_dd)
+LAT, LON = format_lat_lon(_lat_dd, _lon_dd)
 POS_BLOCK = f"{LAT}/{LON}_"
 # directories
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
