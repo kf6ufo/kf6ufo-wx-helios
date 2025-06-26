@@ -1,5 +1,14 @@
 """Shared utility functions used across wx-helios components."""
 import socket
+from datetime import datetime, timezone
+from pathlib import Path
+
+# Location of the runtime directory and ``wxnow.txt`` file.  These are used
+# by ``send_via_wxnow`` when writing the current weather frame.
+PROJECT_ROOT = Path(__file__).resolve().parent
+RUNTIME_DIR = PROJECT_ROOT / "runtime"
+RUNTIME_DIR.mkdir(exist_ok=True)
+WXNOW = RUNTIME_DIR / "wxnow.txt"
 
 
 def send_via_kiss(ax25_frame):
@@ -27,4 +36,18 @@ def send_via_kiss(ax25_frame):
     kiss_frame = b"\xC0\x00" + bytes(escaped) + b"\xC0"
     with socket.create_connection(("127.0.0.1", 8001)) as s:
         s.send(kiss_frame)
+
+
+def send_via_wxnow(frame: str) -> None:
+    """Write an APRS weather frame to ``wxnow.txt``.
+
+    Parameters
+    ----------
+    frame : str
+        The APRS text frame to record.
+    """
+    timestamp = datetime.now(timezone.utc).strftime("%b %d %Y %H:%M\n")
+    with open(WXNOW, "w") as f:
+        f.write(timestamp)
+        f.write(frame + "\n")
 
