@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import psutil
-import socket
 import time
 import config
 import argparse
 import sys
+
+from shared_functions import send_via_kiss
 
 # Parse callsign with optional SSID
 def parse_callsign(full_call):
@@ -200,32 +201,6 @@ def build_aprs_info(
     )
     return position + comment
 
-# Send KISS frame to Direwolf
-def send_via_kiss(ax25_frame):
-    """Send a frame via a KISS TCP connection on localhost.
-
-    Parameters
-    ----------
-    ax25_frame : bytes or bytearray
-        Raw AX.25 frame.
-
-    Returns
-    -------
-    None
-        This function sends data over the network and does not return anything.
-    """
-    escaped = bytearray()
-    for b in ax25_frame:
-        if b == 0xC0:
-            escaped += b"\xDB\xDC"
-        elif b == 0xDB:
-            escaped += b"\xDB\xDD"
-        else:
-            escaped.append(b)
-
-    kiss_frame = b"\xC0\x00" + bytes(escaped) + b"\xC0"
-    with socket.create_connection(("127.0.0.1", 8001)) as s:
-        s.send(kiss_frame)
 
 # Main logic
 def main(argv=None):

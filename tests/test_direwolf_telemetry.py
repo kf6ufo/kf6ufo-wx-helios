@@ -5,6 +5,7 @@ pytest.importorskip("psutil")
 
 import telemetry.direwolf_telemetry as dw
 from telemetry import hub_telemetry
+import shared_functions as shared
 import config
 
 
@@ -30,7 +31,7 @@ def test_kiss_frame_generation(monkeypatch):
     def fake_send(frame):
         sent.append(frame)
 
-    monkeypatch.setattr(hub_telemetry, "send_via_kiss", fake_send)
+    monkeypatch.setattr(shared, "send_via_kiss", fake_send)
 
     dw.main([])
 
