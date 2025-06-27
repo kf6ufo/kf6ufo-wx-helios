@@ -76,12 +76,12 @@ def main(argv=None):
 
     cfg = config.load_direwolf_config()
     if not cfg.get("enabled", True):
-        utils.log_info("direwolf telemetry disabled in configuration")
+        utils.log_info("direwolf telemetry disabled in configuration", source=__name__)
         sys.exit(0)
 
     metrics = read_metrics()
     if not metrics:
-        utils.log_error("No telemetry metrics found")
+        utils.log_error("No telemetry metrics found", source=__name__)
         sys.exit(1)
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config()
@@ -89,8 +89,8 @@ def main(argv=None):
     frame = utils.build_ax25_frame(dest, callsign, path, info)
 
     if args.debug:
-        utils.log_info(info)
-        utils.log_info(frame.hex())
+        utils.log_info(info, source=__name__)
+        utils.log_info(frame.hex(), source=__name__)
     else:
         utils.send_via_kiss(frame)
 

@@ -38,9 +38,9 @@ def _run():
             try:
                 _socket.send(_escape(frame))
             except Exception:
-                log_exception("Failed to send KISS frame")
+                log_exception("Failed to send KISS frame", source=__name__)
     except Exception:
-        log_exception("kiss_client failed to connect")
+        log_exception("kiss_client failed to connect", source=__name__)
     finally:
         if _socket:
             try:
@@ -58,10 +58,10 @@ class _Server:
 def start():
     """Start the KISS client thread."""
     if not ENABLED:
-        log_info("kiss_client disabled in configuration")
+        log_info("kiss_client disabled in configuration", source=__name__)
         return None, None
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
-    log_info("kiss_client thread started")
+    log_info("kiss_client thread started", source=__name__)
     return _Server(), thread

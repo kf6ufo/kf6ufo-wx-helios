@@ -114,11 +114,11 @@ def ecowitt_to_aprs(p):
 
 
 def log_params(client, params):
-    utils.log_info("Ecowitt upload from %s", client)
+    utils.log_info("Ecowitt upload from %s", client, source=__name__)
     for k in sorted(params):
-        utils.log_info("  %s: %s", k, params[k])
+        utils.log_info("  %s: %s", k, params[k], source=__name__)
     info = ecowitt_to_aprs(params)
-    utils.log_info(info)
+    utils.log_info(info, source=__name__)
     ax25 = utils.build_ax25_frame(_dest, _callsign, _path, info)
     utils.send_via_kiss(ax25)
 
@@ -126,7 +126,12 @@ def log_params(client, params):
 class Handler(BaseHTTPRequestHandler):
     def setup(self):
         super().setup()
-        utils.log_info("Connection from %s:%s", self.client_address[0], self.client_address[1])
+        utils.log_info(
+            "Connection from %s:%s",
+            self.client_address[0],
+            self.client_address[1],
+            source=__name__,
+        )
 
     def _okay(self):
         self.send_response(200)
@@ -164,13 +169,13 @@ def start():
         ``(server, thread)`` if enabled, otherwise ``(None, None)``.
     """
     if not ENABLED:
-        utils.log_info("Ecowitt listener disabled in configuration")
+        utils.log_info("Ecowitt listener disabled in configuration", source=__name__)
         return None, None
 
     server = HTTPServer(("", PORT), Handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    utils.log_info("Listening on 0.0.0.0:%s%s", PORT, PATH)
+    utils.log_info("Listening on 0.0.0.0:%s%s", PORT, PATH, source=__name__)
     return server, thread
 
 
