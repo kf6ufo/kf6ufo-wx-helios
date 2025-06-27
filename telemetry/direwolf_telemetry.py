@@ -5,6 +5,10 @@ import re
 import logging
 from pathlib import Path
 
+LOG_SOURCE = (
+    f"{__package__}.{Path(__file__).stem}" if __package__ else Path(__file__).stem
+)
+
 import config
 import utils
 
@@ -76,12 +80,12 @@ def main(argv=None):
 
     cfg = config.load_direwolf_config()
     if not cfg.get("enabled", True):
-        utils.log_info("direwolf telemetry disabled in configuration", source=__name__)
+        utils.log_info("direwolf telemetry disabled in configuration", source=LOG_SOURCE)
         sys.exit(0)
 
     metrics = read_metrics()
     if not metrics:
-        utils.log_error("No telemetry metrics found", source=__name__)
+        utils.log_error("No telemetry metrics found", source=LOG_SOURCE)
         sys.exit(1)
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config()
@@ -89,8 +93,8 @@ def main(argv=None):
     frame = utils.build_ax25_frame(dest, callsign, path, info)
 
     if args.debug:
-        utils.log_info(info, source=__name__)
-        utils.log_info(frame.hex(), source=__name__)
+        utils.log_info(info, source=LOG_SOURCE)
+        utils.log_info(frame.hex(), source=LOG_SOURCE)
     else:
         utils.send_via_kiss(frame)
 

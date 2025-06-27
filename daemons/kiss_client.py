@@ -3,9 +3,14 @@
 import socket
 import threading
 import queue
+from pathlib import Path
 from utils import log_info, log_exception
 
 import config
+
+LOG_SOURCE = (
+    f"{__package__}.{Path(__file__).stem}" if __package__ else Path(__file__).stem
+)
 
 cfg = config.load_kiss_client_config()
 ENABLED = cfg.get("enabled", False)
@@ -38,9 +43,9 @@ def _run():
             try:
                 _socket.send(_escape(frame))
             except Exception:
-                log_exception("Failed to send KISS frame", source=__name__)
+                log_exception("Failed to send KISS frame", source=LOG_SOURCE)
     except Exception:
-        log_exception("kiss_client failed to connect", source=__name__)
+        log_exception("kiss_client failed to connect", source=LOG_SOURCE)
     finally:
         if _socket:
             try:
@@ -58,10 +63,10 @@ class _Server:
 def start():
     """Start the KISS client thread."""
     if not ENABLED:
-        log_info("kiss_client disabled in configuration", source=__name__)
+        log_info("kiss_client disabled in configuration", source=LOG_SOURCE)
         return None, None
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
-    log_info("kiss_client thread started", source=__name__)
+    log_info("kiss_client thread started", source=LOG_SOURCE)
     return _Server(), thread
