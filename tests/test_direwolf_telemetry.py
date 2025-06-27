@@ -4,7 +4,7 @@ from unittest.mock import patch
 pytest.importorskip("psutil")
 
 import telemetry.direwolf_telemetry as dw
-import shared_functions as shared
+import utils as shared
 import config
 
 

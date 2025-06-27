@@ -1,4 +1,4 @@
-import shared_functions as shared
+import utils as shared
 import daemons.kiss_client as kc
 
 

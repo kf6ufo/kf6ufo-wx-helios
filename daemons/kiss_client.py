@@ -3,7 +3,7 @@
 import socket
 import threading
 import queue
-from shared_functions import log_info, log_exception
+from utils import log_info, log_exception
 
 import config
 

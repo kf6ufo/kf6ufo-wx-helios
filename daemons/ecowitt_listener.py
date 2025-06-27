@@ -3,12 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
 from datetime import datetime, timedelta, timezone
 from collections import deque
-from shared_functions import (
-    send_via_kiss,
-    log_info,
-    setup_logging,
-    build_ax25_frame,
-)
+import utils
 import time
 import threading
 import config
@@ -56,7 +51,7 @@ LAT, LON = format_lat_lon(_lat_dd, _lon_dd)
 POS_BLOCK = f"{LAT}/{LON}_"
 
 # configure logging to use UTC timestamps
-setup_logging(use_utc=True)
+utils.setup_logging(use_utc=True)
 
 
 def update_rain_24h(post):
@@ -119,19 +114,19 @@ def ecowitt_to_aprs(p):
 
 
 def log_params(client, params):
-    log_info("Ecowitt upload from %s", client)
+    utils.log_info("Ecowitt upload from %s", client)
     for k in sorted(params):
-        log_info("  %s: %s", k, params[k])
+        utils.log_info("  %s: %s", k, params[k])
     info = ecowitt_to_aprs(params)
-    log_info(info)
-    ax25 = build_ax25_frame(_dest, _callsign, _path, info)
-    send_via_kiss(ax25)
+    utils.log_info(info)
+    ax25 = utils.build_ax25_frame(_dest, _callsign, _path, info)
+    utils.send_via_kiss(ax25)
 
 
 class Handler(BaseHTTPRequestHandler):
     def setup(self):
         super().setup()
-        log_info("Connection from %s:%s", self.client_address[0], self.client_address[1])
+        utils.log_info("Connection from %s:%s", self.client_address[0], self.client_address[1])
 
     def _okay(self):
         self.send_response(200)
@@ -169,13 +164,13 @@ def start():
         ``(server, thread)`` if enabled, otherwise ``(None, None)``.
     """
     if not ENABLED:
-        log_info("Ecowitt listener disabled in configuration")
+        utils.log_info("Ecowitt listener disabled in configuration")
         return None, None
 
     server = HTTPServer(("", PORT), Handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    log_info("Listening on 0.0.0.0:%s%s", PORT, PATH)
+    utils.log_info("Listening on 0.0.0.0:%s%s", PORT, PATH)
     return server, thread
 
 

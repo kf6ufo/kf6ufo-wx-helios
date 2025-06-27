@@ -6,13 +6,7 @@ import argparse
 import sys
 import logging
 
-from shared_functions import (
-    send_via_kiss,
-    build_ax25_frame,
-    decimal_to_aprs,
-    log_info,
-    setup_logging,
-)
+import utils
 
 # Collect system telemetry
 def get_laptop_telemetry():
@@ -94,7 +88,7 @@ def build_aprs_info(
     str
         APRS information field string.
     """
-    position = decimal_to_aprs(lat, lon, symbol_table, symbol)
+    position = utils.decimal_to_aprs(lat, lon, symbol_table, symbol)
     comment = (
         f"cpuT={cpu_temp:.1f} load={cpu_load:.0f} upt={uptime_hours}h "
         f"mem={mem_percent:.0f} disk={disk_percent:.0f} "
@@ -110,39 +104,39 @@ def main(argv=None):
     parser.add_argument('--debug', action='store_true', help='Enable debug mode (no transmit)')
     args = parser.parse_args(argv)
 
-    setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
+    utils.setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
 
     tele_cfg = config.load_hubtelemetry_config()
     if not tele_cfg.get("enabled", True):
-        log_info("hub_telemetry disabled in configuration")
+        utils.log_info("hub_telemetry disabled in configuration")
         sys.exit(0)
 
     callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()
     if args.debug:
-        log_info("Config Loaded:")
-        log_info(
+        utils.log_info("Config Loaded:")
+        utils.log_info(
             f"callsign={callsign}, lat={latitude}, lon={longitude}, symbol_table={symbol_table}, symbol={symbol}, path={path}, dest={destination}, version={version}"
         )
 
     telemetry = get_laptop_telemetry()
     if args.debug:
-        log_info("Telemetry Collected:")
-        log_info(
+        utils.log_info("Telemetry Collected:")
+        utils.log_info(
             f"cpuT={telemetry[0]:.1f}, load={telemetry[1]:.0f}, uptime={telemetry[2]}h, mem={telemetry[3]:.0f}%, disk={telemetry[4]:.0f}%, rx={telemetry[5]}MB, tx={telemetry[6]}MB"
         )
 
     info = build_aprs_info(latitude, longitude, symbol_table, symbol, version, *telemetry)
     if args.debug:
-        log_info("APRS Info Field:")
-        log_info(info)
+        utils.log_info("APRS Info Field:")
+        utils.log_info(info)
 
-    ax25_frame = build_ax25_frame(destination, callsign, path, info)
+    ax25_frame = utils.build_ax25_frame(destination, callsign, path, info)
     if args.debug:
-        log_info("AX25 Frame Built:")
-        log_info(ax25_frame.hex())
+        utils.log_info("AX25 Frame Built:")
+        utils.log_info(ax25_frame.hex())
 
     if not args.debug:
-        send_via_kiss(ax25_frame)
+        utils.send_via_kiss(ax25_frame)
 
 
 if __name__ == "__main__":
