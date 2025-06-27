@@ -1,7 +1,47 @@
 """Shared utility functions used across wx-helios components."""
 import socket
+import logging
+import time
 from datetime import datetime, timezone
 from pathlib import Path
+
+
+def setup_logging(level=logging.INFO, use_utc=False):
+    """Configure global logging settings.
+
+    Parameters
+    ----------
+    level : int, optional
+        Logging level passed to ``basicConfig``. Defaults to ``logging.INFO``.
+    use_utc : bool, optional
+        If ``True`` timestamps use UTC. Defaults to ``False``.
+    """
+
+    if use_utc:
+        logging.Formatter.converter = time.gmtime
+    logging.basicConfig(
+        level=level,
+        format="[%(asctime)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+
+def log_info(message, *args, **kwargs):
+    """Log an informational message via the root logger."""
+
+    logging.info(message, *args, **kwargs)
+
+
+def log_error(message, *args, **kwargs):
+    """Log an error message via the root logger."""
+
+    logging.error(message, *args, **kwargs)
+
+
+def log_exception(message, *args, **kwargs):
+    """Log an exception with traceback via the root logger."""
+
+    logging.exception(message, *args, **kwargs)
 
 
 # ---------------------------------------------------------------------------

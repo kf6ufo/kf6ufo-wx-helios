@@ -1,5 +1,4 @@
 import argparse
-import logging
 import signal
 import subprocess
 import sys
@@ -10,6 +9,7 @@ import shutil
 import importlib
 import config
 from croniter import croniter
+from shared_functions import log_info, log_error, log_exception, setup_logging
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -17,7 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 def start_direwolf():
     cfg = config.load_direwolf_config()
     if not cfg.get("enabled", True):
-        logging.info("Direwolf disabled in configuration")
+        log_info("Direwolf disabled in configuration")
         return None
     conf = PROJECT_ROOT / "direwolf.conf"
     if not conf.exists():
@@ -26,13 +26,13 @@ def start_direwolf():
     runtime_dir.mkdir(exist_ok=True)
     direwolf_bin = PROJECT_ROOT / "external" / "direwolf" / "build" / "src" / "direwolf"
     if not direwolf_bin.exists():
-        logging.error(
+        log_error(
             "Direwolf binary not found at %s. Please run build_external.sh first",
             direwolf_bin,
         )
         return None
     cmd = [str(direwolf_bin), "-c", str(conf), "-l", "direwolf.log"]
-    logging.info("Starting Direwolf: %s", " ".join(cmd))
+    log_info("Starting Direwolf: %s", " ".join(cmd))
     return subprocess.Popen(cmd)
 
 
@@ -49,7 +49,7 @@ def start_rigctld(rig_id: int, usb_num: int, port: int):
         "-t",
         str(port),
     ]
-    logging.info("Starting rigctld: %s", " ".join(cmd))
+    log_info("Starting rigctld: %s", " ".join(cmd))
     return subprocess.Popen(cmd)
 
 
@@ -58,24 +58,24 @@ def start_daemon_modules():
     daemons = []
     for name in config.load_daemon_modules():
         try:
-            logging.info("Starting daemon %s", name)
+            log_info("Starting daemon %s", name)
             module = importlib.import_module(name)
             if hasattr(module, "start"):
                 server, thread = module.start()
                 if server:
                     daemons.append((server, thread))
         except Exception as exc:
-            logging.exception("Failed to start daemon %s: %s", name, exc)
+            log_exception("Failed to start daemon %s: %s", name, exc)
     return daemons
 
 
 def run_telemetry_module(name: str):
     """Execute a single telemetry module."""
     try:
-        logging.info("Running telemetry %s", name)
+        log_info("Running telemetry %s", name)
         subprocess.run([sys.executable, "-m", name])
     except Exception as exc:
-        logging.exception("Telemetry module %s failed: %s", name, exc)
+        log_exception("Telemetry module %s failed: %s", name, exc)
 
 
 
@@ -100,11 +100,7 @@ def main():
     if args.rig_id is None or args.usb_num is None:
         parser.error("rig_id and usb_num must be provided via command line or configuration")
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="[%(asctime)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    setup_logging()
 
     direwolf_proc = start_direwolf()
     rigctld_proc = None
@@ -115,7 +111,7 @@ def main():
             rig_cfg.get("port", config.RIGCTLD_PORT),
         )
     else:
-        logging.info("rigctld disabled in configuration")
+        log_info("rigctld disabled in configuration")
 
     daemon_instances = start_daemon_modules()
 
@@ -160,7 +156,7 @@ def main():
                 time.sleep(min(1, sleep_left))
                 sleep_left -= 1
     finally:
-        logging.info("Shutting down")
+        log_info("Shutting down")
         for server, thread in daemon_instances:
             server.shutdown()
             thread.join()

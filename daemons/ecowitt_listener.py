@@ -3,8 +3,11 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
 from datetime import datetime, timedelta, timezone
 from collections import deque
-from shared_functions import send_via_kiss
-import logging
+from shared_functions import (
+    send_via_kiss,
+    log_info,
+    setup_logging,
+)
 import time
 import threading
 import config
@@ -37,14 +40,7 @@ LAT, LON = format_lat_lon(_lat_dd, _lon_dd)
 POS_BLOCK = f"{LAT}/{LON}_"
 
 # configure logging to use UTC timestamps
-logging.Formatter.converter = time.gmtime
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s UTC] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-
-logger = logging.getLogger(__name__)
+setup_logging(use_utc=True)
 
 
 def update_rain_24h(post):
@@ -107,18 +103,18 @@ def ecowitt_to_aprs(p):
 
 
 def log_params(client, params):
-    logger.info("Ecowitt upload from %s", client)
+    log_info("Ecowitt upload from %s", client)
     for k in sorted(params):
-        logger.info("  %s: %s", k, params[k])
+        log_info("  %s: %s", k, params[k])
     frame = ecowitt_to_aprs(params)
-    logger.info(frame)
+    log_info(frame)
     send_via_kiss(frame)
 
 
 class Handler(BaseHTTPRequestHandler):
     def setup(self):
         super().setup()
-        logger.info("Connection from %s:%s", self.client_address[0], self.client_address[1])
+        log_info("Connection from %s:%s", self.client_address[0], self.client_address[1])
 
     def _okay(self):
         self.send_response(200)
@@ -156,13 +152,13 @@ def start():
         ``(server, thread)`` if enabled, otherwise ``(None, None)``.
     """
     if not ENABLED:
-        logger.info("Ecowitt listener disabled in configuration")
+        log_info("Ecowitt listener disabled in configuration")
         return None, None
 
     server = HTTPServer(("", PORT), Handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    logger.info("Listening on 0.0.0.0:%s%s", PORT, PATH)
+    log_info("Listening on 0.0.0.0:%s%s", PORT, PATH)
     return server, thread
 
 
