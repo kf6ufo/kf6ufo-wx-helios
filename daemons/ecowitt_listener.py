@@ -3,10 +3,15 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
 from datetime import datetime, timedelta, timezone
 from collections import deque
+from pathlib import Path
 import utils
 import time
 import threading
 import config
+
+LOG_SOURCE = (
+    f"{__package__}.{Path(__file__).stem}" if __package__ else Path(__file__).stem
+)
 
 cfg = config.load_ecowitt_config()
 ENABLED = cfg.get("enabled", True)
@@ -114,11 +119,11 @@ def ecowitt_to_aprs(p):
 
 
 def log_params(client, params):
-    utils.log_info("Ecowitt upload from %s", client, source=__name__)
+    utils.log_info("Ecowitt upload from %s", client, source=LOG_SOURCE)
     for k in sorted(params):
-        utils.log_info("  %s: %s", k, params[k], source=__name__)
+        utils.log_info("  %s: %s", k, params[k], source=LOG_SOURCE)
     info = ecowitt_to_aprs(params)
-    utils.log_info(info, source=__name__)
+    utils.log_info(info, source=LOG_SOURCE)
     ax25 = utils.build_ax25_frame(_dest, _callsign, _path, info)
     utils.send_via_kiss(ax25)
 
@@ -130,7 +135,7 @@ class Handler(BaseHTTPRequestHandler):
             "Connection from %s:%s",
             self.client_address[0],
             self.client_address[1],
-            source=__name__,
+            source=LOG_SOURCE,
         )
 
     def _okay(self):
@@ -169,13 +174,13 @@ def start():
         ``(server, thread)`` if enabled, otherwise ``(None, None)``.
     """
     if not ENABLED:
-        utils.log_info("Ecowitt listener disabled in configuration", source=__name__)
+        utils.log_info("Ecowitt listener disabled in configuration", source=LOG_SOURCE)
         return None, None
 
     server = HTTPServer(("", PORT), Handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    utils.log_info("Listening on 0.0.0.0:%s%s", PORT, PATH, source=__name__)
+    utils.log_info("Listening on 0.0.0.0:%s%s", PORT, PATH, source=LOG_SOURCE)
     return server, thread
 
 

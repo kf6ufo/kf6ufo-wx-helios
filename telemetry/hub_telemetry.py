@@ -5,8 +5,13 @@ import config
 import argparse
 import sys
 import logging
+from pathlib import Path
 
 import utils
+
+LOG_SOURCE = (
+    f"{__package__}.{Path(__file__).stem}" if __package__ else Path(__file__).stem
+)
 
 # Collect system telemetry
 def get_laptop_telemetry():
@@ -108,32 +113,32 @@ def main(argv=None):
 
     tele_cfg = config.load_hubtelemetry_config()
     if not tele_cfg.get("enabled", True):
-        utils.log_info("hub_telemetry disabled in configuration", source=__name__)
+        utils.log_info("hub_telemetry disabled in configuration", source=LOG_SOURCE)
         sys.exit(0)
 
     callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()
     if args.debug:
-        utils.log_info("Config Loaded:", source=__name__)
+        utils.log_info("Config Loaded:", source=LOG_SOURCE)
         utils.log_info(
             f"callsign={callsign}, lat={latitude}, lon={longitude}, symbol_table={symbol_table}, symbol={symbol}, path={path}, dest={destination}, version={version}"
-        , source=__name__)
+        , source=LOG_SOURCE)
 
     telemetry = get_laptop_telemetry()
     if args.debug:
-        utils.log_info("Telemetry Collected:", source=__name__)
+        utils.log_info("Telemetry Collected:", source=LOG_SOURCE)
         utils.log_info(
             f"cpuT={telemetry[0]:.1f}, load={telemetry[1]:.0f}, uptime={telemetry[2]}h, mem={telemetry[3]:.0f}%, disk={telemetry[4]:.0f}%, rx={telemetry[5]}MB, tx={telemetry[6]}MB"
-        , source=__name__)
+        , source=LOG_SOURCE)
 
     info = build_aprs_info(latitude, longitude, symbol_table, symbol, version, *telemetry)
     if args.debug:
-        utils.log_info("APRS Info Field:", source=__name__)
-        utils.log_info(info, source=__name__)
+        utils.log_info("APRS Info Field:", source=LOG_SOURCE)
+        utils.log_info(info, source=LOG_SOURCE)
 
     ax25_frame = utils.build_ax25_frame(destination, callsign, path, info)
     if args.debug:
-        utils.log_info("AX25 Frame Built:", source=__name__)
-        utils.log_info(ax25_frame.hex(), source=__name__)
+        utils.log_info("AX25 Frame Built:", source=LOG_SOURCE)
+        utils.log_info(ax25_frame.hex(), source=LOG_SOURCE)
 
     if not args.debug:
         utils.send_via_kiss(ax25_frame)
