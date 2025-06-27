@@ -5,8 +5,7 @@ import re
 from pathlib import Path
 
 import config
-from telemetry import hub_telemetry
-import shared_functions
+from shared_functions import build_ax25_frame, decimal_to_aprs, send_via_kiss
 
 LOG_PATH = Path(__file__).resolve().parent.parent / "direwolf.log"
 
@@ -58,7 +57,7 @@ def read_metrics(path=LOG_PATH):
 
 
 def build_aprs_info(lat, lon, table, symbol, version, metrics):
-    pos = hub_telemetry.decimal_to_aprs(lat, lon, table, symbol)
+    pos = decimal_to_aprs(lat, lon, table, symbol)
     comment = (
         f"dw_busy={metrics.get('busy', 0):.1f} "
         f"dw_rcvq={metrics.get('rcvq', 0)} "
@@ -86,13 +85,13 @@ def main(argv=None):
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config()
     info = build_aprs_info(lat, lon, table, symbol, ver, metrics)
-    frame = hub_telemetry.build_ax25_frame(dest, callsign, path, info)
+    frame = build_ax25_frame(dest, callsign, path, info)
 
     if args.debug:
         print(info)
         print(frame.hex())
     else:
-        shared_functions.send_via_kiss(frame)
+        send_via_kiss(frame)
 
 
 if __name__ == "__main__":
