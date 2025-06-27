@@ -7,15 +7,14 @@ import main
 import config
 
 # croniter versions < 1.4 trigger DeprecationWarnings on Python 3.12 when
-# using ``datetime.utcfromtimestamp`` internally. Silence these warnings so
-# the test output is clean.
-warnings.filterwarnings(
-    "ignore",
-    category=DeprecationWarning,
-    module=r"^croniter",
+# using ``datetime.utcfromtimestamp`` internally. Silence these warnings for
+# this test using PyTest's ``filterwarnings`` mark so the rule is applied
+# even when PyTest resets the warnings filters.
+CRON_DEPRECATION_FILTER = (
+    "ignore:.*utcfromtimestamp.*:DeprecationWarning:croniter.*"
 )
 
-
+@pytest.mark.filterwarnings(CRON_DEPRECATION_FILTER)
 def test_scheduler_runs_at_cron_times(monkeypatch):
     calls = []
     current = 0
@@ -60,4 +59,3 @@ def test_scheduler_runs_at_cron_times(monkeypatch):
         ("m1", 240),
         ("m2", 300),
     ]
-
