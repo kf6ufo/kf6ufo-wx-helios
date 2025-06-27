@@ -16,4 +16,5 @@ runtime/
 *.swo
 *.bak
 *.tmp
+.venv/
 
