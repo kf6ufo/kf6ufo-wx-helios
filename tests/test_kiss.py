@@ -18,6 +18,14 @@ class DummySocket:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
+
+def test_send_via_kiss(monkeypatch):
+    """Verify frames are sent over a socket."""
+    dummy = DummySocket()
+    with patch('socket.create_connection', return_value=dummy):
+        shared.send_via_kiss(b'TEST')
+    assert dummy.sent == b'\xC0\x00TEST\xC0'
+
 class TestKissEscaping(unittest.TestCase):
     def _run_send(self, payload):
         dummy = DummySocket()

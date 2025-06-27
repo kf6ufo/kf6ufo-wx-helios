@@ -44,7 +44,7 @@ port = 8080
 path = /data/report
 
 # Ecowitt listener uses the station latitude and longitude from the APRS
-# section to generate the ``wxnow.txt`` position block.
+# section to generate the position block.
 
 [HUBTELEMETRY]
 # Enable or disable the telemetry beacon

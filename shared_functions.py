@@ -71,12 +71,6 @@ def decimal_to_aprs(lat: float, lon: float, symbol_table: str, symbol: str) -> s
 
     return f"!{lat_str}{symbol_table}{lon_str}{symbol}"
 
-# Location of the runtime directory and ``wxnow.txt`` file.  These are used
-# by ``send_via_wxnow`` when writing the current weather frame.
-PROJECT_ROOT = Path(__file__).resolve().parent
-RUNTIME_DIR = PROJECT_ROOT / "runtime"
-RUNTIME_DIR.mkdir(exist_ok=True)
-WXNOW = RUNTIME_DIR / "wxnow.txt"
 
 
 def send_via_kiss(ax25_frame):
@@ -117,17 +111,4 @@ def send_via_kiss(ax25_frame):
     with socket.create_connection(("127.0.0.1", 8001)) as s:
         s.send(kiss_frame)
 
-
-def send_via_wxnow(frame: str) -> None:
-    """Write an APRS weather frame to ``wxnow.txt``.
-
-    Parameters
-    ----------
-    frame : str
-        The APRS text frame to record.
-    """
-    timestamp = datetime.now(timezone.utc).strftime("%b %d %Y %H:%M\n")
-    with open(WXNOW, "w") as f:
-        f.write(timestamp)
-        f.write(frame + "\n")
 
