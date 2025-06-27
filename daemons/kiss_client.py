@@ -34,44 +34,38 @@ def _escape(ax25_frame: bytes) -> bytes:
 
 
 def _run():
-    """Maintain a connection to the local KISS TCP port and send frames."""
+    """Open a single KISS TCP connection and send queued frames."""
     global _socket
-    while not _stop.is_set():
-        try:
-            _socket = socket.create_connection(("127.0.0.1", 8001))
-            _socket.settimeout(0.2)
-            while not _stop.is_set():
-                try:
-                    frame = FRAME_QUEUE.get(timeout=0.2)
-                    if frame is None:
-                        _stop.set()
-                        break
-                    try:
-                        _socket.send(_escape(frame))
-                    except Exception:
-                        log_exception("Failed to send KISS frame", source=LOG_SOURCE)
-                        break
-                except queue.Empty:
-                    pass
-                try:
-                    while True:
-                        if not _socket.recv(1024):
-                            raise ConnectionError("socket closed")
-                except socket.timeout:
-                    pass
-                except Exception:
-                    break
-        except Exception:
-            if not _stop.is_set():
-                log_exception("kiss_client failed to connect", source=LOG_SOURCE)
-                time.sleep(5)
-        finally:
-            if _socket:
-                try:
-                    _socket.close()
-                except Exception:
-                    pass
-                _socket = None
+    try:
+        _socket = socket.create_connection(("127.0.0.1", 8001))
+        _socket.settimeout(0.2)
+    except Exception:
+        log_exception("kiss_client failed to connect", source=LOG_SOURCE)
+        return
+
+    try:
+        while not _stop.is_set():
+            try:
+                frame = FRAME_QUEUE.get(timeout=0.2)
+            except queue.Empty:
+                continue
+
+            if frame is None:
+                _stop.set()
+                break
+
+            try:
+                _socket.send(_escape(frame))
+            except Exception:
+                log_exception("Failed to send KISS frame", source=LOG_SOURCE)
+                break
+    finally:
+        if _socket:
+            try:
+                _socket.close()
+            except Exception:
+                pass
+            _socket = None
 
 
 class _Server:
