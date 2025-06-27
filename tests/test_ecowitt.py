@@ -35,6 +35,30 @@ def test_temperature_field(temp, expected):
     frame = mod.ecowitt_to_aprs(params)
     assert expected in frame
 
+
+@pytest.mark.parametrize("speed,expected", [
+    (0, "000"),
+    (5, "005"),
+    (123, "123"),
+    (500, "500"),
+])
+def test_wind_speed_field(speed, expected):
+    mod = load_module()
+    mod.update_rain_24h = lambda p: 0
+    params = {
+        "winddir": "0",
+        "windspeedmph": str(speed),
+        "windgustmph": "0",
+        "tempf": "0",
+        "hourlyrainin": "0",
+        "eventrainin": "0",
+        "humidity": "50",
+        "baromrelin": "30",
+        "dateutc": "2020-01-01 00:00:00",
+    }
+    frame = mod.ecowitt_to_aprs(params)
+    assert f"/{expected}" in frame
+
 def test_update_rain_24h_accumulation_and_cleanup():
     """Verify 24‑h totals over a simulated 48‑h period."""
     mod = load_module()
