@@ -11,7 +11,6 @@ def test_send_via_kiss_uses_daemon_queue(monkeypatch):
 
     monkeypatch.setattr(kc, "FRAME_QUEUE", DummyQueue())
     monkeypatch.setattr(kc, "ENABLED", True)
-    monkeypatch.setattr(kc, "_socket", object())
 
     def fail(*a, **k):
         raise AssertionError("socket should not be used")
