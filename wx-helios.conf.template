@@ -53,7 +53,7 @@ enabled = yes
 [DAEMONS]
 # Comma-separated list of daemon modules to launch
 enabled = yes
-modules = daemons.ecowitt_listener
+modules = daemons.ecowitt_listener, daemons.kiss_client
 
 [TELEMETRY]
 # Comma-separated list of telemetry modules to run periodically

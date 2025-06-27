@@ -50,7 +50,12 @@ The files contains configuration settings for the ``Direwolf TNC`` and **kf6ufo-
 ``Direwolf`` can be used by itself to handle PTT on the radio, or ``rigctld`` is included
 for more options in handling PTT.
 If ``rigctld`` is enabled, be sure that the ``Direwolf`` port for ``rigctld`` is the same
-as is configured for ``rigctld`` in ``wx-helios,conf``
+as is configured for ``rigctld`` in ``wx-helios,conf``.
+
+Background services are controlled in the ``[DAEMONS]`` section.  By default
+both the Ecowitt listener and the ``kiss_client`` daemon are launched.  Removing
+``daemons.kiss_client`` from the module list disables the persistent KISS
+connection and causes every packet send to open a new TCP connection.
 
 Telemetry modules can be scheduled individually using cron syntax.  
 
