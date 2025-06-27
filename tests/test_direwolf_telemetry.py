@@ -14,6 +14,15 @@ def test_parse_metrics():
     assert result == {"busy": 12.5, "rcvq": 3, "sendq": 2}
 
 
+def test_read_metrics_file(tmp_path):
+    log_file = tmp_path / "direwolf.log"
+    log_file.write_text(
+        "noise\nT: busy=12.5% cd=0 rcvq=4(0.0) sendq=3(0.0)\nmore\n"
+    )
+    result = dw.read_metrics(log_file)
+    assert result == {"busy": 12.5, "rcvq": 4, "sendq": 3}
+
+
 def test_kiss_frame_generation(monkeypatch):
     metrics = {"busy": 1.0, "rcvq": 2, "sendq": 3}
 
