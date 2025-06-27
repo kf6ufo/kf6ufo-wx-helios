@@ -47,36 +47,17 @@ cp direwolf.conf.template direwolf.conf
 ```
 
 The files contains configuration settings for the ``Direwolf TNC`` and **kf6ufo-wx-helios**.
+The minimum changes you'll need to make are in ``wx-helios.conf`` to edit your **callsign**,
+**latitude** and **longitude**.
+
 ``Direwolf`` can be used by itself to handle PTT on the radio, or ``rigctld`` is included
 for more options in handling PTT.
 If ``rigctld`` is enabled, be sure that the ``Direwolf`` port for ``rigctld`` is the same
 as is configured for ``rigctld`` in ``wx-helios,conf``.
 
-Background services are controlled in the ``[DAEMONS]`` section.  By default
-both the Ecowitt listener and the ``kiss_client`` daemon are launched.  Removing
-``daemons.kiss_client`` from the module list disables the persistent KISS
-connection and causes every packet send to open a new TCP connection.
-
-When active, the ``kiss_client`` daemon starts a ``multiprocessing``
-``SyncManager`` which hosts a shared queue.  The manager's connection
-details are placed in the ``KISS_MANAGER_HOST``, ``KISS_MANAGER_PORT`` and
-``KISS_MANAGER_AUTHKEY`` environment variables so telemetry modules
-running in separate processes can enqueue frames to be sent over the
-persistent connection.
-
-Telemetry modules can be scheduled individually using cron syntax.  
-
-```ini
-[TELEMETRY_SCHEDULES]
-telemetry.hub_telemetry = 0 * * * *
-#other.module = */15 * * * *
-```
-
 ## Running kf6ufo-wx-helios
 
-The provided ``run.sh`` script ensures the ``.venv`` environment exists,
-installs dependencies if necessary, activates the ``.venv`` and then launches ``main.py`` using that interpreter.
-`main.py` starts all the services and daemons, then schedules telemetry runs. 
+The provided ``run.sh`` script launches the project and ensures the environment is setup.
 Simply execute:
 
 ```bash
