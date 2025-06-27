@@ -73,6 +73,7 @@ def test_subprocess_can_queue_frame(monkeypatch):
     monkeypatch.setattr(kc.socket, "create_connection", lambda a: DummySocket())
     monkeypatch.setattr(kc, "HOST", "1.2.3.4")
     monkeypatch.setattr(kc, "PORT", 9000)
+    monkeypatch.setattr(kc, "ENABLED", True)
 
     server, thread = kc.start()
     try:
