@@ -160,7 +160,11 @@ def send_via_kiss(ax25_frame):
             escaped.append(b)
 
     kiss_frame = b"\xC0\x00" + bytes(escaped) + b"\xC0"
-    with socket.create_connection(("127.0.0.1", 8001)) as s:
+    from config import load_kiss_client_config
+    cfg = load_kiss_client_config()
+    host = cfg.get("host", "127.0.0.1")
+    port = cfg.get("port", 8001)
+    with socket.create_connection((host, port)) as s:
         s.send(kiss_frame)
 
 

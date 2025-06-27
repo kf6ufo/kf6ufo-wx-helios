@@ -7,6 +7,7 @@ import pytest
 pytest.importorskip("psutil")
 
 import utils as shared
+import config
 
 class DummySocket:
     def __init__(self):
@@ -20,11 +21,25 @@ class DummySocket:
 
 
 def test_send_via_kiss(monkeypatch):
-    """Verify frames are sent over a socket."""
+    """Verify frames are sent over a socket with configured host/port."""
     dummy = DummySocket()
-    with patch('socket.create_connection', return_value=dummy):
-        shared.send_via_kiss(b'TEST')
-    assert dummy.sent == b'\xC0\x00TEST\xC0'
+    captured = {}
+
+    def fake_create(addr):
+        captured["addr"] = addr
+        return dummy
+
+    monkeypatch.setattr(shared.socket, "create_connection", fake_create)
+    monkeypatch.setattr(
+        config,
+        "load_kiss_client_config",
+        lambda: {"enabled": False, "host": "1.2.3.4", "port": 9001},
+    )
+
+    shared.send_via_kiss(b"TEST")
+
+    assert dummy.sent == b"\xC0\x00TEST\xC0"
+    assert captured.get("addr") == ("1.2.3.4", 9001)
 
 class TestKissEscaping(unittest.TestCase):
     def _run_send(self, payload):

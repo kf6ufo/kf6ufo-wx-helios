@@ -21,3 +21,33 @@ def test_send_via_kiss_uses_daemon_queue(monkeypatch):
     shared.send_via_kiss(frame)
 
     assert items == [frame]
+
+
+def test_kiss_client_connects_to_configured_host_port(monkeypatch):
+    """Verify the daemon connects using configured host and port."""
+
+    captured = {}
+
+    class DummySocket:
+        def settimeout(self, t):
+            pass
+
+        def close(self):
+            pass
+
+        def send(self, data):
+            pass
+
+    def fake_create(addr):
+        captured["addr"] = addr
+        return DummySocket()
+
+    monkeypatch.setattr(kc.socket, "create_connection", fake_create)
+    monkeypatch.setattr(kc, "HOST", "5.6.7.8")
+    monkeypatch.setattr(kc, "PORT", 7000)
+    kc.FRAME_QUEUE = kc.queue.Queue()
+    kc.FRAME_QUEUE.put(None)
+    kc._stop.clear()
+    kc._run()
+
+    assert captured.get("addr") == ("5.6.7.8", 7000)
