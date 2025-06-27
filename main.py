@@ -3,6 +3,7 @@ import signal
 import subprocess
 import sys
 import time
+import os
 from pathlib import Path
 import threading
 import shutil
@@ -78,7 +79,8 @@ def run_telemetry_module(name: str):
     """Execute a single telemetry module."""
     try:
         log_info("Running telemetry %s", name, source=LOG_SOURCE)
-        subprocess.run([sys.executable, "-m", name])
+        env = os.environ.copy()
+        subprocess.run([sys.executable, "-m", name], env=env)
     except Exception as exc:
         log_exception("Telemetry module %s failed: %s", name, exc, source=LOG_SOURCE)
 

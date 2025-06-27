@@ -4,6 +4,8 @@ import socket
 import threading
 import queue
 import time
+import os
+from multiprocessing.managers import SyncManager
 from pathlib import Path
 from utils import log_info, log_exception
 
@@ -18,9 +20,21 @@ ENABLED = cfg.get("enabled", False)
 HOST = cfg.get("host", "127.0.0.1")
 PORT = cfg.get("port", 8001)
 
-FRAME_QUEUE = queue.Queue()
+_manager = None
+FRAME_QUEUE = None
 _stop = threading.Event()
 _socket = None
+
+
+class _QueueManager(SyncManager):
+    pass
+
+
+def _get_frame_queue():
+    return FRAME_QUEUE
+
+
+_QueueManager.register("get_frame_queue", callable=_get_frame_queue)
 
 
 def _escape(ax25_frame: bytes) -> bytes:
@@ -73,7 +87,13 @@ def _run():
 class _Server:
     def shutdown(self):
         _stop.set()
-        FRAME_QUEUE.put(None)
+        if FRAME_QUEUE:
+            FRAME_QUEUE.put(None)
+        if _manager:
+            try:
+                _manager.shutdown()
+            except Exception:
+                pass
 
 
 def start():
@@ -81,6 +101,17 @@ def start():
     if not ENABLED:
         log_info("kiss_client disabled in configuration", source=LOG_SOURCE)
         return None, None
+
+    global _manager, FRAME_QUEUE
+    authkey = os.urandom(16)
+    _manager = _QueueManager(address=("127.0.0.1", 0), authkey=authkey)
+    _manager.start()
+    FRAME_QUEUE = _manager.Queue()
+
+    host, port = _manager.address
+    os.environ["KISS_MANAGER_HOST"] = host
+    os.environ["KISS_MANAGER_PORT"] = str(port)
+    os.environ["KISS_MANAGER_AUTHKEY"] = authkey.hex()
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()

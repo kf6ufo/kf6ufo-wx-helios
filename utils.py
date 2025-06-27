@@ -2,6 +2,8 @@
 import socket
 import logging
 import time
+import os
+from multiprocessing.managers import SyncManager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -149,6 +151,24 @@ def send_via_kiss(ax25_frame):
             return
     except Exception:
         pass
+
+    host = os.environ.get("KISS_MANAGER_HOST")
+    port = os.environ.get("KISS_MANAGER_PORT")
+    auth = os.environ.get("KISS_MANAGER_AUTHKEY")
+    if host and port and auth:
+        try:
+            authkey = bytes.fromhex(auth)
+            class _QueueManager(SyncManager):
+                pass
+
+            _QueueManager.register("get_frame_queue")
+            mgr = _QueueManager(address=(host, int(port)), authkey=authkey)
+            mgr.connect()
+            q = mgr.get_frame_queue()
+            q.put(ax25_frame)
+            return
+        except Exception:
+            pass
 
     escaped = bytearray()
     for b in ax25_frame:
