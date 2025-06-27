@@ -82,3 +82,9 @@ port = 4534
 [KISS_CLIENT]
 # Enable or disable the background KISS client
 enabled = yes
+
+# Host running the KISS TCP server
+host = 127.0.0.1
+
+# TCP port for the KISS server
+port = 8001

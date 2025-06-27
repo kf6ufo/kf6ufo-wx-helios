@@ -15,6 +15,8 @@ LOG_SOURCE = (
 
 cfg = config.load_kiss_client_config()
 ENABLED = cfg.get("enabled", False)
+HOST = cfg.get("host", "127.0.0.1")
+PORT = cfg.get("port", 8001)
 
 FRAME_QUEUE = queue.Queue()
 _stop = threading.Event()
@@ -37,7 +39,7 @@ def _run():
     """Open a single KISS TCP connection and send queued frames."""
     global _socket
     try:
-        _socket = socket.create_connection(("127.0.0.1", 8001))
+        _socket = socket.create_connection((HOST, PORT))
         _socket.settimeout(0.2)
     except Exception:
         log_exception("kiss_client failed to connect", source=LOG_SOURCE)

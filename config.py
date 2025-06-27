@@ -103,9 +103,13 @@ def load_kiss_client_config():
     cfg = _get_config()
     section = "KISS_CLIENT"
     if section not in cfg:
-        return {"enabled": False}
+        return {"enabled": False, "host": "127.0.0.1", "port": 8001}
     kc = cfg[section]
-    return {"enabled": kc.getboolean("enabled", True)}
+    return {
+        "enabled": kc.getboolean("enabled", True),
+        "host": kc.get("host", "127.0.0.1"),
+        "port": int(kc.get("port", 8001)),
+    }
 
 
 def load_rig_config():
