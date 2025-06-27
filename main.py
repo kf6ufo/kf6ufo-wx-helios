@@ -25,6 +25,12 @@ def start_direwolf():
     runtime_dir = PROJECT_ROOT / "runtime"
     runtime_dir.mkdir(exist_ok=True)
     direwolf_bin = PROJECT_ROOT / "external" / "direwolf" / "build" / "src" / "direwolf"
+    if not direwolf_bin.exists():
+        logging.error(
+            "Direwolf binary not found at %s. Please run build_external.sh first",
+            direwolf_bin,
+        )
+        return None
     cmd = [str(direwolf_bin), "-c", str(conf), "-l", "direwolf.log"]
     logging.info("Starting Direwolf: %s", " ".join(cmd))
     return subprocess.Popen(cmd)
