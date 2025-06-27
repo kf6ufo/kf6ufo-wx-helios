@@ -7,6 +7,7 @@ from shared_functions import (
     send_via_kiss,
     log_info,
     setup_logging,
+    build_ax25_frame,
 )
 import time
 import threading
@@ -19,10 +20,25 @@ PATH = cfg.get("path", "/data/report")
 RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
 
 try:
-    _callsign, _lat_dd, _lon_dd, *_ = config.load_aprs_config()
+    (
+        _callsign,
+        _lat_dd,
+        _lon_dd,
+        _symbol_table,
+        _symbol,
+        _path,
+        _dest,
+        _version,
+    ) = config.load_aprs_config()
 except Exception:
+    _callsign = "NOCALL"
     _lat_dd = 0.0
     _lon_dd = 0.0
+    _symbol_table = "/"
+    _symbol = "-"
+    _path = []
+    _dest = "APZ001"
+    _version = ""
 
 def format_lat_lon(lat, lon):
     """Return APRS-formatted latitude and longitude strings."""
@@ -106,9 +122,10 @@ def log_params(client, params):
     log_info("Ecowitt upload from %s", client)
     for k in sorted(params):
         log_info("  %s: %s", k, params[k])
-    frame = ecowitt_to_aprs(params)
-    log_info(frame)
-    send_via_kiss(frame)
+    info = ecowitt_to_aprs(params)
+    log_info(info)
+    ax25 = build_ax25_frame(_dest, _callsign, _path, info)
+    send_via_kiss(ax25)
 
 
 class Handler(BaseHTTPRequestHandler):
