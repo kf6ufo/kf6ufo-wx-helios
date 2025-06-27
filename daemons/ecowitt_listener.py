@@ -87,7 +87,7 @@ def clamp(val, lo, hi):
 def ecowitt_to_aprs(p):
     # wind
     wd = clamp(int(float(p["winddir"])), 0, 360)
-    ws = clamp(int(float(p["windspeedmph"])), 0, 99)
+    ws = clamp(int(float(p["windspeedmph"])), 0, 999)
     wg = clamp(int(float(p["windgustmph"])), 0, 999)
 
     # temperature
@@ -112,7 +112,7 @@ def ecowitt_to_aprs(p):
     # timestamp + assemble
     ts = datetime.now(timezone.utc).strftime("%d%H%M")
     return (f"@{ts}z{POS_BLOCK}"
-            f"{wd:03d}/{ws:02d}g{wg:03d}"
+            f"{wd:03d}/{ws:03d}g{wg:03d}"
             f"{t_field}"
             f"r{rRRR:03d}p{pPPP:03d}P{PQQQ:03d}"
             f"h{rh:02d}b{bp:05d}")
