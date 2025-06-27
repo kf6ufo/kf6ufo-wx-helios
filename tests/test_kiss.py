@@ -6,7 +6,7 @@ import pytest
 # depends on it at import time.
 pytest.importorskip("psutil")
 
-import shared_functions as shared
+import utils as shared
 
 class DummySocket:
     def __init__(self):

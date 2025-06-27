@@ -6,14 +6,7 @@ import logging
 from pathlib import Path
 
 import config
-from shared_functions import (
-    build_ax25_frame,
-    decimal_to_aprs,
-    send_via_kiss,
-    log_info,
-    log_error,
-    setup_logging,
-)
+import utils
 
 LOG_PATH = Path(__file__).resolve().parent.parent / "direwolf.log"
 
@@ -65,7 +58,7 @@ def read_metrics(path=LOG_PATH):
 
 
 def build_aprs_info(lat, lon, table, symbol, version, metrics):
-    pos = decimal_to_aprs(lat, lon, table, symbol)
+    pos = utils.decimal_to_aprs(lat, lon, table, symbol)
     comment = (
         f"dw_busy={metrics.get('busy', 0):.1f} "
         f"dw_rcvq={metrics.get('rcvq', 0)} "
@@ -79,27 +72,27 @@ def main(argv=None):
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args(argv)
 
-    setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
+    utils.setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
 
     cfg = config.load_direwolf_config()
     if not cfg.get("enabled", True):
-        log_info("direwolf telemetry disabled in configuration")
+        utils.log_info("direwolf telemetry disabled in configuration")
         sys.exit(0)
 
     metrics = read_metrics()
     if not metrics:
-        log_error("No telemetry metrics found")
+        utils.log_error("No telemetry metrics found")
         sys.exit(1)
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config()
     info = build_aprs_info(lat, lon, table, symbol, ver, metrics)
-    frame = build_ax25_frame(dest, callsign, path, info)
+    frame = utils.build_ax25_frame(dest, callsign, path, info)
 
     if args.debug:
-        log_info(info)
-        log_info(frame.hex())
+        utils.log_info(info)
+        utils.log_info(frame.hex())
     else:
-        send_via_kiss(frame)
+        utils.send_via_kiss(frame)
 
 
 if __name__ == "__main__":

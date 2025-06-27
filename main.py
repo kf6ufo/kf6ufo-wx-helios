@@ -9,7 +9,7 @@ import shutil
 import importlib
 import config
 from croniter import croniter
-from shared_functions import log_info, log_error, log_exception, setup_logging
+from utils import log_info, log_error, log_exception, setup_logging
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
