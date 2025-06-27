@@ -78,7 +78,11 @@ def test_subprocess_can_queue_frame(monkeypatch):
     server, thread = kc.start()
     try:
         cmd = [sys.executable, "-c", "import utils; utils.send_via_kiss(b'HI')"]
-        subprocess.run(cmd, env=os.environ.copy(), check=True)
+        env = os.environ.copy()
+        env["PYTHONPATH"] = os.pathsep.join(
+            [os.path.dirname(os.path.dirname(__file__)), env.get("PYTHONPATH", "")]
+        )
+        subprocess.run(cmd, env=env, check=True)
         time.sleep(0.1)
     finally:
         server.shutdown()
