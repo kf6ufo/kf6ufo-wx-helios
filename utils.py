@@ -21,27 +21,38 @@ def setup_logging(level=logging.INFO, use_utc=False):
         logging.Formatter.converter = time.gmtime
     logging.basicConfig(
         level=level,
-        format="[%(asctime)s] %(message)s",
+        format="[%(asctime)s] %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
 
-def log_info(message, *args, **kwargs):
-    """Log an informational message via the root logger."""
+def log_info(message, *args, source=None, **kwargs):
+    """Log an informational message.
 
-    logging.info(message, *args, **kwargs)
+    Parameters
+    ----------
+    message : str
+        The log message.
+    source : str, optional
+        Name of the logger to use. If omitted, the root logger is used.
+    """
+
+    logger = logging.getLogger(source) if source else logging.getLogger()
+    logger.info(message, *args, **kwargs)
 
 
-def log_error(message, *args, **kwargs):
-    """Log an error message via the root logger."""
+def log_error(message, *args, source=None, **kwargs):
+    """Log an error message."""
 
-    logging.error(message, *args, **kwargs)
+    logger = logging.getLogger(source) if source else logging.getLogger()
+    logger.error(message, *args, **kwargs)
 
 
-def log_exception(message, *args, **kwargs):
-    """Log an exception with traceback via the root logger."""
+def log_exception(message, *args, source=None, **kwargs):
+    """Log an exception with traceback."""
 
-    logging.exception(message, *args, **kwargs)
+    logger = logging.getLogger(source) if source else logging.getLogger()
+    logger.exception(message, *args, **kwargs)
 
 
 # ---------------------------------------------------------------------------
