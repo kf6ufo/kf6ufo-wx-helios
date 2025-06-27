@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qsl
 from datetime import datetime, timedelta, timezone
 from collections import deque
-from shared_functions import send_via_wxnow
+from shared_functions import send_via_kiss
 import logging
 import time
 import threading
@@ -112,7 +112,7 @@ def log_params(client, params):
         logger.info("  %s: %s", k, params[k])
     frame = ecowitt_to_aprs(params)
     logger.info(frame)
-    send_via_wxnow(frame)
+    send_via_kiss(frame)
 
 
 class Handler(BaseHTTPRequestHandler):
