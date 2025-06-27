@@ -3,6 +3,74 @@ import socket
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+# ---------------------------------------------------------------------------
+# AX.25/APRS helper functions
+# ---------------------------------------------------------------------------
+
+def parse_callsign(full_call: str):
+    """Split a callsign of the form ``CALL-SSID``.
+
+    Parameters
+    ----------
+    full_call : str
+        Callsign optionally followed by ``-SSID``.
+
+    Returns
+    -------
+    tuple[str, int]
+        Two-item tuple of the padded callsign and SSID number.
+    """
+
+    if "-" in full_call:
+        base, ssid = full_call.split("-")
+        ssid = int(ssid)
+    else:
+        base, ssid = full_call, 0
+    return base.ljust(6), ssid
+
+
+def encode_callsign(callsign: str, ssid: int) -> bytearray:
+    """Encode a callsign and SSID using AX.25 formatting."""
+
+    encoded = bytearray([(ord(c) << 1) for c in callsign])
+    encoded.append(((ssid & 0x0F) << 1) | 0x60)
+    return encoded
+
+
+def build_ax25_frame(destination: str, source: str, path: list[str], info: str) -> bytearray:
+    """Construct a UI frame according to the AX.25 protocol."""
+
+    frame = bytearray()
+    dest_call, dest_ssid = parse_callsign(destination)
+    src_call, src_ssid = parse_callsign(source)
+    frame += encode_callsign(dest_call, dest_ssid)
+    frame += encode_callsign(src_call, src_ssid)
+    for hop in path:
+        path_call, path_ssid = parse_callsign(hop)
+        frame += encode_callsign(path_call, path_ssid)
+    frame[-1] |= 0x01  # End-of-address flag
+    frame += b"\x03"  # Control field (UI)
+    frame += b"\xF0"  # PID (no layer 3)
+    frame += info.encode("ascii")
+    return frame
+
+
+def decimal_to_aprs(lat: float, lon: float, symbol_table: str, symbol: str) -> str:
+    """Convert decimal degrees to an APRS position string."""
+
+    ns = "N" if lat >= 0 else "S"
+    ew = "E" if lon >= 0 else "W"
+    lat_deg = int(abs(lat))
+    lat_min = (abs(lat) - lat_deg) * 60
+    lon_deg = int(abs(lon))
+    lon_min = (abs(lon) - lon_deg) * 60
+
+    lat_str = f"{lat_deg:02d}{lat_min:05.2f}{ns}"
+    lon_str = f"{lon_deg:03d}{lon_min:05.2f}{ew}"
+
+    return f"!{lat_str}{symbol_table}{lon_str}{symbol}"
+
 # Location of the runtime directory and ``wxnow.txt`` file.  These are used
 # by ``send_via_wxnow`` when writing the current weather frame.
 PROJECT_ROOT = Path(__file__).resolve().parent

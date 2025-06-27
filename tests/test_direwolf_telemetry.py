@@ -4,7 +4,6 @@ from unittest.mock import patch
 pytest.importorskip("psutil")
 
 import telemetry.direwolf_telemetry as dw
-from telemetry import hub_telemetry
 import shared_functions as shared
 import config
 
@@ -36,6 +35,6 @@ def test_kiss_frame_generation(monkeypatch):
     dw.main([])
 
     info = dw.build_aprs_info(10.0, -100.0, "/", "Y", "v1", metrics)
-    expected = hub_telemetry.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
+    expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
 
     assert sent and sent[0] == expected
