@@ -4,11 +4,14 @@ import time
 import config
 import argparse
 import sys
+import logging
 
 from shared_functions import (
     send_via_kiss,
     build_ax25_frame,
     decimal_to_aprs,
+    log_info,
+    setup_logging,
 )
 
 # Collect system telemetry
@@ -107,31 +110,36 @@ def main(argv=None):
     parser.add_argument('--debug', action='store_true', help='Enable debug mode (no transmit)')
     args = parser.parse_args(argv)
 
+    setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
+
     tele_cfg = config.load_hubtelemetry_config()
     if not tele_cfg.get("enabled", True):
-        if args.debug:
-            print("hub_telemetry disabled in configuration")
+        log_info("hub_telemetry disabled in configuration")
         sys.exit(0)
 
     callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()
     if args.debug:
-        print("Config Loaded:")
-        print(f"callsign={callsign}, lat={latitude}, lon={longitude}, symbol_table={symbol_table}, symbol={symbol}, path={path}, dest={destination}, version={version}")
+        log_info("Config Loaded:")
+        log_info(
+            f"callsign={callsign}, lat={latitude}, lon={longitude}, symbol_table={symbol_table}, symbol={symbol}, path={path}, dest={destination}, version={version}"
+        )
 
     telemetry = get_laptop_telemetry()
     if args.debug:
-        print("Telemetry Collected:")
-        print(f"cpuT={telemetry[0]:.1f}, load={telemetry[1]:.0f}, uptime={telemetry[2]}h, mem={telemetry[3]:.0f}%, disk={telemetry[4]:.0f}%, rx={telemetry[5]}MB, tx={telemetry[6]}MB")
+        log_info("Telemetry Collected:")
+        log_info(
+            f"cpuT={telemetry[0]:.1f}, load={telemetry[1]:.0f}, uptime={telemetry[2]}h, mem={telemetry[3]:.0f}%, disk={telemetry[4]:.0f}%, rx={telemetry[5]}MB, tx={telemetry[6]}MB"
+        )
 
     info = build_aprs_info(latitude, longitude, symbol_table, symbol, version, *telemetry)
     if args.debug:
-        print("APRS Info Field:")
-        print(info)
+        log_info("APRS Info Field:")
+        log_info(info)
 
     ax25_frame = build_ax25_frame(destination, callsign, path, info)
     if args.debug:
-        print("AX25 Frame Built:")
-        print(ax25_frame.hex())
+        log_info("AX25 Frame Built:")
+        log_info(ax25_frame.hex())
 
     if not args.debug:
         send_via_kiss(ax25_frame)

@@ -2,10 +2,18 @@
 import argparse
 import sys
 import re
+import logging
 from pathlib import Path
 
 import config
-from shared_functions import build_ax25_frame, decimal_to_aprs, send_via_kiss
+from shared_functions import (
+    build_ax25_frame,
+    decimal_to_aprs,
+    send_via_kiss,
+    log_info,
+    log_error,
+    setup_logging,
+)
 
 LOG_PATH = Path(__file__).resolve().parent.parent / "direwolf.log"
 
@@ -71,16 +79,16 @@ def main(argv=None):
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args(argv)
 
+    setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
+
     cfg = config.load_direwolf_config()
     if not cfg.get("enabled", True):
-        if args.debug:
-            print("direwolf telemetry disabled in configuration")
+        log_info("direwolf telemetry disabled in configuration")
         sys.exit(0)
 
     metrics = read_metrics()
     if not metrics:
-        if args.debug:
-            print("No telemetry metrics found")
+        log_error("No telemetry metrics found")
         sys.exit(1)
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config()
@@ -88,8 +96,8 @@ def main(argv=None):
     frame = build_ax25_frame(dest, callsign, path, info)
 
     if args.debug:
-        print(info)
-        print(frame.hex())
+        log_info(info)
+        log_info(frame.hex())
     else:
         send_via_kiss(frame)
 
