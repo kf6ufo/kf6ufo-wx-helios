@@ -57,6 +57,13 @@ both the Ecowitt listener and the ``kiss_client`` daemon are launched.  Removing
 ``daemons.kiss_client`` from the module list disables the persistent KISS
 connection and causes every packet send to open a new TCP connection.
 
+When active, the ``kiss_client`` daemon starts a ``multiprocessing``
+``SyncManager`` which hosts a shared queue.  The manager's connection
+details are placed in the ``KISS_MANAGER_HOST``, ``KISS_MANAGER_PORT`` and
+``KISS_MANAGER_AUTHKEY`` environment variables so telemetry modules
+running in separate processes can enqueue frames to be sent over the
+persistent connection.
+
 Telemetry modules can be scheduled individually using cron syntax.  
 
 ```ini

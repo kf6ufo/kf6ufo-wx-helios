@@ -88,3 +88,6 @@ host = 127.0.0.1
 
 # TCP port for the KISS server
 port = 8001
+# When the KISS client daemon is active, it exposes a multiprocessing queue
+# using environment variables KISS_MANAGER_HOST, KISS_MANAGER_PORT and
+# KISS_MANAGER_AUTHKEY for telemetry modules.

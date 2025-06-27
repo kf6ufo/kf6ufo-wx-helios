@@ -1,5 +1,9 @@
 import utils as shared
 import daemons.kiss_client as kc
+import sys
+import subprocess
+import time
+import os
 
 
 def test_send_via_kiss_uses_daemon_queue(monkeypatch):
@@ -51,3 +55,32 @@ def test_kiss_client_connects_to_configured_host_port(monkeypatch):
     kc._run()
 
     assert captured.get("addr") == ("5.6.7.8", 7000)
+
+
+def test_subprocess_can_queue_frame(monkeypatch):
+    sent = []
+
+    class DummySocket:
+        def settimeout(self, t):
+            pass
+
+        def close(self):
+            pass
+
+        def send(self, data):
+            sent.append(data)
+
+    monkeypatch.setattr(kc.socket, "create_connection", lambda a: DummySocket())
+    monkeypatch.setattr(kc, "HOST", "1.2.3.4")
+    monkeypatch.setattr(kc, "PORT", 9000)
+
+    server, thread = kc.start()
+    try:
+        cmd = [sys.executable, "-c", "import utils; utils.send_via_kiss(b'HI')"]
+        subprocess.run(cmd, env=os.environ.copy(), check=True)
+        time.sleep(0.1)
+    finally:
+        server.shutdown()
+        thread.join()
+
+    assert sent
