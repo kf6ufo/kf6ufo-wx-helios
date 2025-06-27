@@ -37,7 +37,8 @@ def start_direwolf():
             source=LOG_SOURCE,
         )
         return None
-    cmd = [str(direwolf_bin), "-c", str(conf), "-l", "direwolf.log"]
+    log_file = PROJECT_ROOT / "direwolf.log"
+    cmd = [str(direwolf_bin), "-c", str(conf), "-l", str(log_file)]
     log_info("Starting Direwolf: %s", " ".join(cmd), source=LOG_SOURCE)
     return subprocess.Popen(cmd)
 

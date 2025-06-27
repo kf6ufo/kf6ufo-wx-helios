@@ -16,5 +16,6 @@ fi
 # Activate the environment so any subprocesses use its tools
 source "$VENV_DIR/bin/activate"
 
+cd "$SCRIPT_DIR"
 exec python "$SCRIPT_DIR/main.py" "$@"
 
