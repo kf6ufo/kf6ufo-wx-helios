@@ -10,6 +10,8 @@ hub_telemetry.conf
 wx-helios.conf
 
 runtime/
+log/
+!log/README.md
 
 # IDE/editor temporary files
 *.swp
