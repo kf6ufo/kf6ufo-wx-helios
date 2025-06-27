@@ -103,7 +103,7 @@ def load_kiss_client_config():
     cfg = _get_config()
     section = "KISS_CLIENT"
     if section not in cfg:
-        return {"enabled": True}
+        return {"enabled": False}
     kc = cfg[section]
     return {"enabled": kc.getboolean("enabled", True)}
 
