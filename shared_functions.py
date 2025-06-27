@@ -26,7 +26,11 @@ def send_via_kiss(ax25_frame):
     """
     try:
         from daemons import kiss_client
-        if getattr(kiss_client, "ENABLED", False) and hasattr(kiss_client, "FRAME_QUEUE"):
+        if (
+            getattr(kiss_client, "ENABLED", False)
+            and hasattr(kiss_client, "FRAME_QUEUE")
+            and getattr(kiss_client, "_socket", None) is not None
+        ):
             kiss_client.FRAME_QUEUE.put(ax25_frame)
             return
     except Exception:
