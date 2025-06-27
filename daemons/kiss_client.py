@@ -5,6 +5,7 @@ import threading
 import queue
 import time
 import os
+import multiprocessing
 from multiprocessing.managers import SyncManager
 from pathlib import Path
 from utils import log_info, log_exception
@@ -34,7 +35,18 @@ def _get_frame_queue():
     return FRAME_QUEUE
 
 
-_QueueManager.register("get_frame_queue", callable=_get_frame_queue)
+_QUEUE_METHODS = (
+    "empty",
+    "full",
+    "get",
+    "get_nowait",
+    "join",
+    "put",
+    "put_nowait",
+    "qsize",
+    "task_done",
+)
+
 
 
 def _escape(ax25_frame: bytes) -> bytes:
@@ -104,9 +116,18 @@ def start():
 
     global _manager, FRAME_QUEUE
     authkey = os.urandom(16)
+    FRAME_QUEUE = multiprocessing.Queue()
+
+    _QueueManager.register(
+        "get_frame_queue",
+        callable=lambda: FRAME_QUEUE,
+        exposed=_QUEUE_METHODS,
+    )
+
     _manager = _QueueManager(address=("127.0.0.1", 0), authkey=authkey)
     _manager.start()
-    FRAME_QUEUE = _manager.Queue()
+
+    _stop.clear()
 
     host, port = _manager.address
     os.environ["KISS_MANAGER_HOST"] = host
