@@ -92,7 +92,7 @@ def main(argv=None):
         print(info)
         print(frame.hex())
     else:
-        shared_functions.send_via_kiss(frame)
+        shared_functions.send_raw_via_kiss(frame)
 
 
 if __name__ == "__main__":

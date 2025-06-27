@@ -5,7 +5,7 @@ import config
 import argparse
 import sys
 
-from shared_functions import send_via_kiss
+from shared_functions import send_raw_via_kiss
 
 # Parse callsign with optional SSID
 def parse_callsign(full_call):
@@ -236,7 +236,7 @@ def main(argv=None):
         print(ax25_frame.hex())
 
     if not args.debug:
-        send_via_kiss(ax25_frame)
+        send_raw_via_kiss(ax25_frame)
 
 
 if __name__ == "__main__":

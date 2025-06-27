@@ -31,7 +31,7 @@ def test_kiss_frame_generation(monkeypatch):
     def fake_send(frame):
         sent.append(frame)
 
-    monkeypatch.setattr(shared, "send_via_kiss", fake_send)
+    monkeypatch.setattr(shared, "send_raw_via_kiss", fake_send)
 
     dw.main([])
 

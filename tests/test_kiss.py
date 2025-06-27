@@ -22,7 +22,7 @@ class TestKissEscaping(unittest.TestCase):
     def _run_send(self, payload):
         dummy = DummySocket()
         with patch('socket.create_connection', return_value=dummy):
-            shared.send_via_kiss(payload)
+            shared.send_raw_via_kiss(payload)
         return dummy.sent
 
     def test_no_escape(self):

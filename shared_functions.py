@@ -1,17 +1,12 @@
 """Shared utility functions used across wx-helios components."""
 import socket
-from datetime import datetime, timezone
 from pathlib import Path
 
-# Location of the runtime directory and ``wxnow.txt`` file.  These are used
-# by ``send_via_wxnow`` when writing the current weather frame.
+# Base project directory used by various helpers.
 PROJECT_ROOT = Path(__file__).resolve().parent
-RUNTIME_DIR = PROJECT_ROOT / "runtime"
-RUNTIME_DIR.mkdir(exist_ok=True)
-WXNOW = RUNTIME_DIR / "wxnow.txt"
 
 
-def send_via_kiss(ax25_frame):
+def send_raw_via_kiss(ax25_frame):
     """Send a frame via a KISS TCP connection on localhost.
 
     Parameters
@@ -50,16 +45,18 @@ def send_via_kiss(ax25_frame):
         s.send(kiss_frame)
 
 
-def send_via_wxnow(frame: str) -> None:
-    """Write an APRS weather frame to ``wxnow.txt``.
+def send_via_kiss(frame: str) -> None:
+    """Send an APRS text frame via KISS.
 
     Parameters
     ----------
     frame : str
-        The APRS text frame to record.
+        The APRS text frame to transmit.
     """
-    timestamp = datetime.now(timezone.utc).strftime("%b %d %Y %H:%M\n")
-    with open(WXNOW, "w") as f:
-        f.write(timestamp)
-        f.write(frame + "\n")
+    from telemetry import hub_telemetry
+    import config
+
+    callsign, _, _, _, _, path, destination, _ = config.load_aprs_config()
+    ax25 = hub_telemetry.build_ax25_frame(destination, callsign, path, frame)
+    send_raw_via_kiss(ax25)
 

@@ -2,7 +2,7 @@ import shared_functions as shared
 import daemons.kiss_client as kc
 
 
-def test_send_via_kiss_uses_daemon_queue(monkeypatch):
+def test_send_raw_via_kiss_uses_daemon_queue(monkeypatch):
     items = []
 
     class DummyQueue:
@@ -19,6 +19,6 @@ def test_send_via_kiss_uses_daemon_queue(monkeypatch):
     monkeypatch.setattr(shared.socket, "create_connection", fail)
 
     frame = b"\x01\x02"
-    shared.send_via_kiss(frame)
+    shared.send_raw_via_kiss(frame)
 
     assert items == [frame]
