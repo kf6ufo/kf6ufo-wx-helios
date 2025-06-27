@@ -12,7 +12,7 @@ LOG_SOURCE = (
 import config
 import utils
 
-LOG_PATH = Path(__file__).resolve().parent.parent / "direwolf.log"
+LOG_PATH = Path(__file__).resolve().parent.parent / "log"
 
 
 def parse_metrics(line):
@@ -31,8 +31,23 @@ def parse_metrics(line):
 
 
 def read_metrics(path=LOG_PATH):
-    """Return the most recent set of metrics from ``direwolf.log``."""
+    """Return the most recent set of metrics from ``direwolf.log``.
+
+    ``path`` may point directly to a log file or a directory containing
+    rotated log files.  When a directory is provided, the newest ``*.log``
+    file inside the directory is used.
+    """
     p = Path(path)
+    if p.is_dir():
+        log_files = sorted(
+            [f for f in p.glob("*.log") if f.is_file()],
+            key=lambda f: f.stat().st_mtime,
+            reverse=True,
+        )
+        if not log_files:
+            return None
+        p = log_files[0]
+
     try:
         with p.open("r") as f:
             lines = f.readlines()
