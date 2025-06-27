@@ -127,6 +127,9 @@ def decimal_to_aprs(lat: float, lon: float, symbol_table: str, symbol: str) -> s
 def send_via_kiss(ax25_frame):
     """Send a frame via a KISS TCP connection on localhost.
 
+    If the ``kiss_client`` daemon is active, the frame is queued for that
+    persistent connection instead of opening a new socket each time.
+
     Parameters
     ----------
     ax25_frame : bytes or bytearray
@@ -139,10 +142,8 @@ def send_via_kiss(ax25_frame):
     """
     try:
         from daemons import kiss_client
-        if (
-            getattr(kiss_client, "ENABLED", False)
-            and hasattr(kiss_client, "FRAME_QUEUE")
-            and getattr(kiss_client, "_socket", None) is not None
+        if getattr(kiss_client, "ENABLED", False) and hasattr(
+            kiss_client, "FRAME_QUEUE"
         ):
             kiss_client.FRAME_QUEUE.put(ax25_frame)
             return
