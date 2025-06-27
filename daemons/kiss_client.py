@@ -63,4 +63,5 @@ def start():
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
+    log_info("kiss_client thread started")
     return _Server(), thread
