@@ -161,7 +161,19 @@ def send_via_kiss(ax25_frame):
             class _QueueManager(SyncManager):
                 pass
 
-            _QueueManager.register("get_frame_queue")
+            _QUEUE_METHODS = (
+                "empty",
+                "full",
+                "get",
+                "get_nowait",
+                "join",
+                "put",
+                "put_nowait",
+                "qsize",
+                "task_done",
+            )
+
+            _QueueManager.register("get_frame_queue", exposed=_QUEUE_METHODS)
             mgr = _QueueManager(address=(host, int(port)), authkey=authkey)
             mgr.connect()
             q = mgr.get_frame_queue()
