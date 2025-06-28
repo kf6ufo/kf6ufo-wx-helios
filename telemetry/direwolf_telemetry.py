@@ -85,8 +85,10 @@ def main(argv=None):
 
     metrics = read_metrics()
     if not metrics:
-        utils.log_error("No telemetry metrics found", source=LOG_SOURCE)
-        sys.exit(1)
+        utils.log_info(
+            "No telemetry metrics found, sending zeros", source=LOG_SOURCE
+        )
+        metrics = {}
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config()
     info = build_aprs_info(lat, lon, table, symbol, ver, metrics)
