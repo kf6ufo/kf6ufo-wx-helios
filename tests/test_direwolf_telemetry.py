@@ -51,3 +51,27 @@ def test_kiss_frame_generation(monkeypatch):
     expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
 
     assert sent and sent[0] == expected
+
+
+def test_zero_frame_when_no_metrics(monkeypatch):
+    monkeypatch.setattr(config, "load_direwolf_config", lambda: {"enabled": True})
+    monkeypatch.setattr(dw, "read_metrics", lambda path=None: None)
+    monkeypatch.setattr(
+        config,
+        "load_aprs_config",
+        lambda: ("SRC-1", 10.0, -100.0, "/", "Y", ["WIDE1-1"], "DEST", "v1"),
+    )
+
+    sent = []
+
+    def fake_send(frame):
+        sent.append(frame)
+
+    monkeypatch.setattr(shared, "send_via_kiss", fake_send)
+
+    dw.main([])
+
+    info = dw.build_aprs_info(10.0, -100.0, "/", "Y", "v1", {})
+    expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
+
+    assert sent and sent[0] == expected
