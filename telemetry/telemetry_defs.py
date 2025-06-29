@@ -10,33 +10,33 @@ import utils
 LOG_SOURCE = f"{__package__}.{Path(__file__).stem}" if __package__ else Path(__file__).stem
 
 
-def _build_def_packets(names, units, bits):
+def _build_def_packets(names, units, bits, addressee):
     names = (list(names) + [""] * 5)[:5]
     units = (list(units) + [""] * 5)[:5]
     bits = (list(bits) + [""] * 8)[:8]
 
-    # Definition packets should be sent as APRS messages. Prefix each
-    # payload with a colon so the first character is the ":" data type
-    # indicator recognized by digipeaters and TNC software.
-    parm = ":PARM." + ",".join(names)
-    unit = ":UNIT." + ",".join(units + bits)
-    eqns = ":EQNS." + ",".join(["0", "1", "0"] * 5)
-    bits_line = ":BITS." + ",".join(bits)
+    addr_field = addressee.ljust(9)[:9]
+    prefix = f":{addr_field}:"
+
+    parm = prefix + "PARM." + ",".join(names)
+    unit = prefix + "UNIT." + ",".join(units + bits)
+    eqns = prefix + "EQNS." + ",".join(["0", "1", "0"] * 5)
+    bits_line = prefix + "BITS." + ",".join(bits)
     return [parm, unit, eqns, bits_line]
 
 
-def hub_definitions():
+def hub_definitions(addressee):
     names = ["cpuT", "cpuLoad", "uptime", "rxMB", "txMB"]
     units = ["C", "%", "h", "MB", "MB"]
     bits = ["diskLow", "memLow"]
-    return _build_def_packets(names, units, bits)
+    return _build_def_packets(names, units, bits, addressee)
 
 
-def direwolf_definitions():
+def direwolf_definitions(addressee):
     names = ["busy", "rcvq", "sendq"]
     units = ["%", "", ""]
     bits = []
-    return _build_def_packets(names, units, bits)
+    return _build_def_packets(names, units, bits, addressee)
 
 
 def main(argv=None):
@@ -48,15 +48,15 @@ def main(argv=None):
 
     frames = []
     if config.load_hubtelemetry_config().get("enabled", True):
-        defs = hub_definitions()
         callsign, lat, lon, table, sym, path, dest, ver = config.load_aprs_config("HUBTELEMETRY")
+        defs = hub_definitions(dest)
         for info in defs:
             frame = utils.build_ax25_frame(dest, callsign, path, info)
             frames.append(frame)
 
     if config.load_direwolf_config().get("enabled", True):
-        defs = direwolf_definitions()
         callsign, lat, lon, table, sym, path, dest, ver = config.load_aprs_config("DIREWOLF_TELEMETRY")
+        defs = direwolf_definitions(dest)
         for info in defs:
             frame = utils.build_ax25_frame(dest, callsign, path, info)
             frames.append(frame)
