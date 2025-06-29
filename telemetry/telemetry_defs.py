@@ -15,10 +15,13 @@ def _build_def_packets(names, units, bits):
     units = (list(units) + [""] * 5)[:5]
     bits = (list(bits) + [""] * 8)[:8]
 
-    parm = "PARM." + ",".join(names)
-    unit = "UNIT." + ",".join(units + bits)
-    eqns = "EQNS." + ",".join(["0","1","0"] * 5)
-    bits_line = "BITS." + ",".join(bits)
+    # Definition packets should be sent as APRS messages. Prefix each
+    # payload with a colon so the first character is the ":" data type
+    # indicator recognized by digipeaters and TNC software.
+    parm = ":PARM." + ",".join(names)
+    unit = ":UNIT." + ",".join(units + bits)
+    eqns = ":EQNS." + ",".join(["0", "1", "0"] * 5)
+    bits_line = ":BITS." + ",".join(bits)
     return [parm, unit, eqns, bits_line]
 
 
