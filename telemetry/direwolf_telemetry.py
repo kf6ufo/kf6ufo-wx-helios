@@ -93,6 +93,7 @@ def main(argv=None):
         metrics = {}
 
     callsign, lat, lon, table, symbol, path, dest, ver = config.load_aprs_config("DIREWOLF_TELEMETRY")
+    callsign = utils.callsign_with_offset(callsign, 1)
     info = build_aprs_info(lat, lon, table, symbol, ver, metrics)
     frame = utils.build_ax25_frame(dest, callsign, path, info)
 

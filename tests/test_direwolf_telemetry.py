@@ -48,7 +48,7 @@ def test_kiss_frame_generation(monkeypatch):
     dw.main([])
 
     info = dw.build_aprs_info(10.0, -100.0, "/", "Y", "v1", metrics)
-    expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
+    expected = shared.build_ax25_frame("DEST", "SRC-2", ["WIDE1-1"], info)
 
     assert sent and sent[0] == expected
     assert info == "T#000,010,002,003,000,000,00000000 ver=v1"
@@ -73,7 +73,7 @@ def test_zero_frame_when_no_metrics(monkeypatch):
     dw.main([])
 
     info = dw.build_aprs_info(10.0, -100.0, "/", "Y", "v1", {})
-    expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
+    expected = shared.build_ax25_frame("DEST", "SRC-2", ["WIDE1-1"], info)
 
     assert sent and sent[0] == expected
     assert info == "T#000,000,000,000,000,000,00000000 ver=v1"

@@ -83,6 +83,38 @@ def parse_callsign(full_call: str):
     return base.ljust(6), ssid
 
 
+def callsign_with_offset(full_call: str, offset: int = 0) -> str:
+    """Return ``full_call`` with its SSID incremented by ``offset``.
+
+    Parameters
+    ----------
+    full_call : str
+        Base callsign optionally including an ``-SSID`` suffix.
+    offset : int, optional
+        Amount to add to the existing SSID (default ``0``).
+
+    Returns
+    -------
+    str
+        Callsign string with the updated SSID. If the resulting SSID is ``0``
+        no ``-SSID`` suffix is included.
+    """
+
+    if "-" in full_call:
+        base, ssid = full_call.rsplit("-", 1)
+        if ssid.isdigit():
+            ssid = int(ssid) + offset
+        else:
+            base = full_call
+            ssid = offset
+    else:
+        base, ssid = full_call, offset
+
+    if ssid:
+        return f"{base}-{ssid}"
+    return base
+
+
 def encode_callsign(callsign: str, ssid: int) -> bytearray:
     """Encode a callsign and SSID using AX.25 formatting."""
 

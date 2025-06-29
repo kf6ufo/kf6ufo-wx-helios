@@ -58,6 +58,7 @@ def main(argv=None):
     frames = []
     if config.load_hubtelemetry_config().get("enabled", True):
         callsign, lat, lon, table, sym, path, dest, ver = config.load_aprs_config("HUBTELEMETRY")
+        callsign = utils.callsign_with_offset(callsign, 0)
         defs = hub_definitions(dest)
         for info in defs:
             frame = utils.build_ax25_frame(dest, callsign, path, info)
@@ -65,6 +66,7 @@ def main(argv=None):
 
     if config.load_direwolf_config().get("enabled", True):
         callsign, lat, lon, table, sym, path, dest, ver = config.load_aprs_config("DIREWOLF_TELEMETRY")
+        callsign = utils.callsign_with_offset(callsign, 1)
         defs = direwolf_definitions(dest)
         for info in defs:
             frame = utils.build_ax25_frame(dest, callsign, path, info)
