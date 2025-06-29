@@ -20,5 +20,9 @@ def test_def_frames(monkeypatch):
     infos = defs.hub_definitions("DEST") + defs.direwolf_definitions("DEST")
     expected = [shared.build_ax25_frame("DEST", "SRC-1", ["W"], info) for info in infos]
     assert sent == expected
+
+    prefix = ":" + "DEST".ljust(9)[:9] + ":"
+    assert infos[3].startswith(prefix + "BITS.11000000")
+    assert infos[7].startswith(prefix + "BITS.00000000")
     for info in infos:
         assert info.startswith(":")
