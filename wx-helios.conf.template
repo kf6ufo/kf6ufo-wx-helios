@@ -15,10 +15,10 @@ longitude = -100.0
 # Symbol table selector: primary or secondary
 # 'primary'   -> uses '/'
 # 'secondary' -> uses '\\'
-symbol_table = secondary
+symbol_table = primary
 
 # APRS map symbol (case sensitive)
-symbol = Y
+symbol = _
 
 # Digipeater path
 path = WIDE1-1,WIDE2-1
