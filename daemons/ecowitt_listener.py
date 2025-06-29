@@ -117,7 +117,7 @@ def ecowitt_to_aprs(p):
         f"{t_field}"
         f"r{rRRR:03d}p{pPPP:03d}P{PQQQ:03d}"
         f"h{rh:02d}b{bp:05d}"
-        f"X{_version}WxHe 1 WX Helios by KF6UFO"
+        f" WX Helios by KF6UFO"
     )
 
 
