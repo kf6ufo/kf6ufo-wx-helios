@@ -116,7 +116,7 @@ def main(argv=None):
         utils.log_info("hub_telemetry disabled in configuration", source=LOG_SOURCE)
         sys.exit(0)
 
-    callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config()
+    callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config("HUBTELEMETRY")
     if args.debug:
         utils.log_info("Config Loaded:", source=LOG_SOURCE)
         utils.log_info(

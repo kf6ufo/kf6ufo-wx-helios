@@ -23,6 +23,11 @@ symbol = _
 # Digipeater path
 path = WIDE1-1,WIDE2-1
 
+# Individual modules can override ``symbol_table``, ``symbol`` and ``path``
+# using the same option names in their own sections. For example the
+# ``[ECOWITT]`` section below can specify ``symbol`` and ``digipeater_path``
+# for weather packets.
+
 # APRS destination field
 # Use APZ001 for custom experimental software
 destination = APZ001
@@ -43,12 +48,26 @@ port = 8080
 # URL path for uploads
 path = /data/report
 
+# Weather packets can use a different APRS symbol or digipeater path
+symbol_table = primary
+symbol = _
+digipeater_path = WIDE2-2
+
 # Ecowitt listener uses the station latitude and longitude from the APRS
 # section to generate the position block.
 
 [HUBTELEMETRY]
 # Enable or disable the telemetry beacon
 enabled = yes
+symbol_table = primary
+symbol = _
+digipeater_path = WIDE1-1,WIDE2-1
+
+[DIREWOLF_TELEMETRY]
+# Options for telemetry generated from Direwolf logs
+symbol_table = primary
+symbol = _
+digipeater_path = WIDE1-1,WIDE2-1
 
 [DAEMONS]
 # Comma-separated list of daemon modules to launch
