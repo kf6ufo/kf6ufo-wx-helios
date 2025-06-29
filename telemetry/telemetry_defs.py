@@ -21,7 +21,16 @@ def _build_def_packets(names, units, bits, addressee):
     parm = prefix + "PARM." + ",".join(names)
     unit = prefix + "UNIT." + ",".join(units + bits)
     eqns = prefix + "EQNS." + ",".join(["0", "1", "0"] * 5)
-    bits_line = prefix + "BITS." + ",".join(bits)
+
+    # The BITS line begins with eight sense digits (0 or 1) which
+    # Direwolf expects before the comma-separated bit names.  Use
+    # ``1`` for defined bits and ``0`` for unused positions.
+    sense = "1" * len([b for b in bits if b])
+    sense = (sense + "0" * 8)[:8]
+
+    bits_line = prefix + "BITS." + sense
+    if bits:
+        bits_line += "," + ",".join(bits)
     return [parm, unit, eqns, bits_line]
 
 
