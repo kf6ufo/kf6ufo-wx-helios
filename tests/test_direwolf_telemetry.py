@@ -51,6 +51,7 @@ def test_kiss_frame_generation(monkeypatch):
     expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
 
     assert sent and sent[0] == expected
+    assert info == "T#000,010,002,003,000,000,00000000 ver=v1"
 
 
 def test_zero_frame_when_no_metrics(monkeypatch):
@@ -75,3 +76,4 @@ def test_zero_frame_when_no_metrics(monkeypatch):
     expected = shared.build_ax25_frame("DEST", "SRC-1", ["WIDE1-1"], info)
 
     assert sent and sent[0] == expected
+    assert info == "T#000,000,000,000,000,000,00000000 ver=v1"

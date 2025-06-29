@@ -62,44 +62,23 @@ def build_aprs_info(
     disk_percent,
     net_rx_mb,
     net_tx_mb,
+    seq=0,
 ):
-    """Create the APRS information field from telemetry values.
+    """Create an APRS telemetry packet from system metrics."""
 
-    Parameters
-    ----------
-    lat, lon : float
-        Position in decimal degrees.
-    symbol_table : str
-        Symbol table identifier.
-    symbol : str
-        APRS map symbol.
-    version : str
-        Beacon software version string.
-    cpu_temp : float
-        CPU temperature in Celsius.
-    cpu_load : float
-        CPU utilisation percentage.
-    uptime_hours : int
-        System uptime in hours.
-    mem_percent : float
-        Memory usage percentage.
-    disk_percent : float
-        Disk usage percentage.
-    net_rx_mb, net_tx_mb : int
-        Network usage counters in megabytes.
+    analog = [
+        cpu_temp,
+        cpu_load,
+        uptime_hours,
+        net_rx_mb,
+        net_tx_mb,
+    ]
 
-    Returns
-    -------
-    str
-        APRS information field string.
-    """
-    position = utils.decimal_to_aprs(lat, lon, symbol_table, symbol)
-    comment = (
-        f"cpuT={cpu_temp:.1f} load={cpu_load:.0f} upt={uptime_hours}h "
-        f"mem={mem_percent:.0f} disk={disk_percent:.0f} "
-        f"rx={net_rx_mb} tx={net_tx_mb} ver={version}"
-    )
-    return position + comment
+    disk_low = disk_percent >= 90
+    mem_low = mem_percent >= 90
+
+    comment = f"ver={version}"
+    return utils.build_aprs_telemetry(seq, analog=analog, digital=[disk_low, mem_low], comment=comment)
 
 
 # Main logic

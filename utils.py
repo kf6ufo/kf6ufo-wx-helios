@@ -125,6 +125,38 @@ def decimal_to_aprs(lat: float, lon: float, symbol_table: str, symbol: str) -> s
     return f"!{lat_str}{symbol_table}{lon_str}{symbol}"
 
 
+def build_aprs_telemetry(seq: int, analog=None, digital=None, comment: str | None = None) -> str:
+    """Return an APRS telemetry packet string.
+
+    Parameters
+    ----------
+    seq : int
+        Sequence number (0-999).
+    analog : list[float] | None
+        Up to five analog values.
+    digital : list[bool] | None
+        Up to eight digital flags.
+    comment : str | None
+        Optional comment appended after the data.
+    """
+
+    analog = analog or []
+    digital = digital or []
+
+    a_vals = list(analog)[:5]
+    a_vals += [0] * (5 - len(a_vals))
+    a_formatted = [f"{int(round(max(0, min(999, v)))):03d}" for v in a_vals]
+
+    d_vals = list(digital)[:8]
+    d_vals += [0] * (8 - len(d_vals))
+    d_bits = "".join("1" if bool(v) else "0" for v in d_vals)
+
+    info = f"T#{seq:03d}," + ",".join(a_formatted) + f",{d_bits}"
+    if comment:
+        info += f" {comment}"
+    return info
+
+
 
 def send_via_kiss(ax25_frame):
     """Send a frame via a KISS TCP connection on localhost.
