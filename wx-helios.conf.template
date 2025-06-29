@@ -77,7 +77,7 @@ modules = daemons.ecowitt_listener, daemons.kiss_client
 [TELEMETRY]
 # Comma-separated list of telemetry modules to run periodically
 enabled = yes
-modules = telemetry.hub_telemetry, telemetry.direwolf_telemetry
+modules = telemetry.hub_telemetry, telemetry.direwolf_telemetry, telemetry.telemetry_defs
 
 [TELEMETRY_SCHEDULES]
 # Cron expressions for individual telemetry modules
@@ -85,6 +85,8 @@ modules = telemetry.hub_telemetry, telemetry.direwolf_telemetry
 telemetry.hub_telemetry = 0 * * * *
 # Example: poll Dire Wolf telemetry every 5 minutes
 telemetry.direwolf_telemetry = */5 * * * *
+# Transmit telemetry definitions every 6 hours
+telemetry.telemetry_defs = 0 */6 * * *
 # Example: run another module every 15 minutes
 #other.module = */15 * * * *
 
