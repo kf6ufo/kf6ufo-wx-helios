@@ -17,18 +17,45 @@ def _get_config():
         _config = parser
     return _config
 
-def load_aprs_config():
+def load_aprs_config(section: str | None = None):
+    """Return APRS configuration, optionally overridden per module.
+
+    Parameters
+    ----------
+    section : str or None
+        Optional configuration section providing module specific overrides.
+
+    Returns
+    -------
+    tuple
+        ``(callsign, latitude, longitude, symbol_table, symbol, path, destination, version)``
+    """
+
     cfg = _get_config()
     aprs = cfg["APRS"]
+
     callsign = aprs["callsign"]
     latitude = float(aprs["latitude"])
     longitude = float(aprs["longitude"])
+
     symbol_table_raw = aprs.get("symbol_table", "primary").strip().lower()
     symbol_table = "/" if symbol_table_raw == "primary" else "\\"
-    symbol = aprs["symbol"]
+    symbol = aprs.get("symbol", "_")
     path = [p.strip() for p in aprs.get("path", "").split(",") if p.strip()]
+
+    if section and section in cfg:
+        sec = cfg[section]
+        sym_raw = sec.get("symbol_table", symbol_table_raw).strip().lower()
+        symbol_table = "/" if sym_raw == "primary" else "\\"
+        symbol = sec.get("symbol", symbol)
+        # support either digipeater_path or aprs_path for clarity
+        path_key = "digipeater_path" if "digipeater_path" in sec else "aprs_path"
+        if path_key in sec:
+            path = [p.strip() for p in sec.get(path_key, "").split(",") if p.strip()]
+
     destination = aprs.get("destination", "APZ001")
     version = aprs.get("version", "v5")
+
     return callsign, latitude, longitude, symbol_table, symbol, path, destination, version
 
 def load_ecowitt_config():

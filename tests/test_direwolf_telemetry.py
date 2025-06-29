@@ -35,7 +35,7 @@ def test_kiss_frame_generation(monkeypatch):
     monkeypatch.setattr(
         config,
         "load_aprs_config",
-        lambda: ("SRC-1", 10.0, -100.0, "/", "Y", ["WIDE1-1"], "DEST", "v1"),
+        lambda *a, **k: ("SRC-1", 10.0, -100.0, "/", "Y", ["WIDE1-1"], "DEST", "v1"),
     )
 
     sent = []
@@ -59,7 +59,7 @@ def test_zero_frame_when_no_metrics(monkeypatch):
     monkeypatch.setattr(
         config,
         "load_aprs_config",
-        lambda: ("SRC-1", 10.0, -100.0, "/", "Y", ["WIDE1-1"], "DEST", "v1"),
+        lambda *a, **k: ("SRC-1", 10.0, -100.0, "/", "Y", ["WIDE1-1"], "DEST", "v1"),
     )
 
     sent = []

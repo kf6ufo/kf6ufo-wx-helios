@@ -26,17 +26,17 @@ try:
         _lon_dd,
         _symbol_table,
         _symbol,
-        _path,
+        _digipeater_path,
         _dest,
         _version,
-    ) = config.load_aprs_config()
+    ) = config.load_aprs_config("ECOWITT")
 except Exception:
     _callsign = "NOCALL"
     _lat_dd = 0.0
     _lon_dd = 0.0
     _symbol_table = "/"
     _symbol = "-"
-    _path = []
+    _digipeater_path = []
     _dest = "APZ001"
     _version = ""
 
@@ -127,7 +127,7 @@ def log_params(client, params):
         utils.log_info("  %s: %s", k, params[k], source=LOG_SOURCE)
     info = ecowitt_to_aprs(params)
     utils.log_info(info, source=LOG_SOURCE)
-    ax25 = utils.build_ax25_frame(_dest, _callsign, _path, info)
+    ax25 = utils.build_ax25_frame(_dest, _callsign, _digipeater_path, info)
     utils.send_via_kiss(ax25)
 
 
