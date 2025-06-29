@@ -17,8 +17,13 @@ def test_def_frames(monkeypatch):
 
     defs.main([])
 
-    infos = defs.hub_definitions("DEST") + defs.direwolf_definitions("DEST")
-    expected = [shared.build_ax25_frame("DEST", "SRC-1", ["W"], info) for info in infos]
+    hub_defs = defs.hub_definitions("DEST")
+    dw_defs = defs.direwolf_definitions("DEST")
+    infos = hub_defs + dw_defs
+    expected = []
+    for i, info in enumerate(infos):
+        callsign = "SRC-1" if i < len(hub_defs) else "SRC-2"
+        expected.append(shared.build_ax25_frame("DEST", callsign, ["W"], info))
     assert sent == expected
 
     prefix = ":" + "DEST".ljust(9)[:9] + ":"

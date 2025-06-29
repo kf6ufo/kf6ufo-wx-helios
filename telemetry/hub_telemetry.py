@@ -96,6 +96,7 @@ def main(argv=None):
         sys.exit(0)
 
     callsign, latitude, longitude, symbol_table, symbol, path, destination, version = config.load_aprs_config("HUBTELEMETRY")
+    callsign = utils.callsign_with_offset(callsign, 0)
     if args.debug:
         utils.log_info("Config Loaded:", source=LOG_SOURCE)
         utils.log_info(
