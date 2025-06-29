@@ -61,14 +61,16 @@ def read_metrics(path=LOG_PATH):
     return None
 
 
-def build_aprs_info(lat, lon, table, symbol, version, metrics):
-    pos = utils.decimal_to_aprs(lat, lon, table, symbol)
-    comment = (
-        f"dw_busy={metrics.get('busy', 0):.1f} "
-        f"dw_rcvq={metrics.get('rcvq', 0)} "
-        f"dw_sendq={metrics.get('sendq', 0)} ver={version}"
-    )
-    return pos + comment
+def build_aprs_info(lat, lon, table, symbol, version, metrics, seq=0):
+    """Build an APRS telemetry packet for Direwolf metrics."""
+
+    busy = metrics.get("busy", 0.0) * 10
+    rcvq = metrics.get("rcvq", 0)
+    sendq = metrics.get("sendq", 0)
+
+    analog = [busy, rcvq, sendq]
+    comment = f"ver={version}"
+    return utils.build_aprs_telemetry(seq, analog=analog, comment=comment)
 
 
 def main(argv=None):
