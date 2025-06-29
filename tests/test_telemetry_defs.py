@@ -19,5 +19,6 @@ def test_def_frames(monkeypatch):
 
     infos = defs.hub_definitions() + defs.direwolf_definitions()
     expected = [shared.build_ax25_frame("DEST", "SRC-1", ["W"], info) for info in infos]
-
     assert sent == expected
+    for info in infos:
+        assert info.startswith(":")
