@@ -96,7 +96,7 @@ def ecowitt_to_aprs(p):
 
     # rainfall
     rain1h  = float(p.get("hourlyrainin", 0))
-    rainmid = float(p.get("eventrainin", 0))           # since local midnight
+    rainmid = float(p.get("dailyrainin", 0))           # rainfall since local midnight
     rRRR = clamp(int(round(rain1h  * 100)), 0, 999)
     PQQQ = clamp(int(round(rainmid * 100)), 0, 999)
     pPPP = clamp(update_rain_24h(p),        0, 999)

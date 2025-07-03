@@ -27,7 +27,7 @@ def test_temperature_field(temp, expected):
         "windgustmph": "0",
         "tempf": str(temp),
         "hourlyrainin": "0",
-        "eventrainin": "0",
+        "dailyrainin": "0",
         "humidity": "50",
         "baromrelin": "30",
         "dateutc": "2020-01-01 00:00:00",
@@ -51,7 +51,7 @@ def test_wind_speed_field(speed, expected):
         "windgustmph": "0",
         "tempf": "0",
         "hourlyrainin": "0",
-        "eventrainin": "0",
+        "dailyrainin": "0",
         "humidity": "50",
         "baromrelin": "30",
         "dateutc": "2020-01-01 00:00:00",
@@ -99,3 +99,22 @@ def test_format_lat_lon(lat, lon, expected_lat, expected_lon):
     result_lat, result_lon = mod.format_lat_lon(lat, lon)
     assert result_lat == expected_lat
     assert result_lon == expected_lon
+
+
+def test_daily_rainfall_field():
+    """Verify that the APRS packet uses dailyrainin for the P field."""
+    mod = load_module()
+    mod.update_rain_24h = lambda p: 0
+    params = {
+        "winddir": "0",
+        "windspeedmph": "0",
+        "windgustmph": "0",
+        "tempf": "0",
+        "hourlyrainin": "0",
+        "dailyrainin": "0.25",
+        "humidity": "50",
+        "baromrelin": "30",
+        "dateutc": "2020-01-01 00:00:00",
+    }
+    frame = mod.ecowitt_to_aprs(params)
+    assert "P025" in frame
