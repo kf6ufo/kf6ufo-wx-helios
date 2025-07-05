@@ -29,11 +29,11 @@ path = WIDE1-1,WIDE2-1
 # for weather packets.
 
 # APRS destination field
-# Use APZ001 for custom experimental software
-destination = APZ001
+# APWHE? is allocated for WX Helios
+destination = APWHE1
 
 # Optional software version string
-version = v5
+version = v1
 
 [DIREWOLF]
 # Enable or disable the Direwolf TNC
