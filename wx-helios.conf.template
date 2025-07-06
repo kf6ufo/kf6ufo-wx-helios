@@ -29,8 +29,8 @@ path = WIDE1-1,WIDE2-1
 # for weather packets.
 
 # APRS destination field
-# APWHE? is allocated for WX Helios
-destination = APWHE1
+# APWHE0 is the official identifier for wx-helios
+destination = APWHE0
 
 # Optional software version string
 version = v1
