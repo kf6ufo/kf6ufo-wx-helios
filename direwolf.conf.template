@@ -14,5 +14,5 @@ AGWPORT 8000
 KISSPORT 8001
 
 # Beacon
-PBEACON delay=1 every=5 lat=10.000 long=-100.000 symbol=/r comment="NOCALL-0, Configure WX Station Direwolf Beacon" via=WIDE2-1
+PBEACON delay=1 every=5 lat=10.000 long=-100.000 symbol=/r comment="NOCALL-0, Configure WX Station Direwolf Beacon" dest=APWHE0 via=WIDE2-1
 
