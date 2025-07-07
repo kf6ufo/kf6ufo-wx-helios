@@ -150,5 +150,7 @@ def load_rig_config():
         result["rig_id"] = int(rig.get("rig_id", 0))
     if "usb_num" in rig:
         result["usb_num"] = int(rig.get("usb_num", 0))
+    if "baud" in rig:
+        result["baud"] = int(rig.get("baud"))
     result["port"] = int(rig.get("port", RIGCTLD_PORT))
     return result

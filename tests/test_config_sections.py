@@ -47,3 +47,21 @@ def test_telemetry_schedules_values(tmp_path, monkeypatch):
         "foo": "0 * * * *",
         "bar": "*/5 * * * *",
     }
+
+
+def test_rig_config_with_baud(tmp_path, monkeypatch):
+    conf = """[RIG]
+rig_id = 1
+usb_num = 2
+baud = 4800
+port = 9999
+"""
+    write_config(tmp_path, conf, monkeypatch)
+    cfg = config.load_rig_config()
+    assert cfg == {
+        "enabled": True,
+        "rig_id": 1,
+        "usb_num": 2,
+        "baud": 4800,
+        "port": 9999,
+    }
