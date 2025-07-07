@@ -61,13 +61,23 @@ def _escape(ax25_frame: bytes) -> bytes:
     return b"\xC0\x00" + bytes(escaped) + b"\xC0"
 
 
+def _connect_with_retry():
+    """Return a connected socket, retrying until stop is signaled."""
+    while not _stop.is_set():
+        try:
+            sock = socket.create_connection((HOST, PORT))
+            sock.settimeout(0.2)
+            return sock
+        except Exception:
+            time.sleep(0.2)
+    return None
+
+
 def _run():
     """Open a single KISS TCP connection and send queued frames."""
     global _socket
-    try:
-        _socket = socket.create_connection((HOST, PORT))
-        _socket.settimeout(0.2)
-    except Exception:
+    _socket = _connect_with_retry()
+    if not _socket:
         log_exception("kiss_client failed to connect", source=LOG_SOURCE)
         return
 

@@ -89,3 +89,32 @@ def test_subprocess_can_queue_frame(monkeypatch):
         thread.join()
 
     assert sent
+
+
+def test_kiss_client_retries_until_connects(monkeypatch):
+    attempts = []
+
+    class DummySocket:
+        def settimeout(self, t):
+            pass
+
+        def close(self):
+            pass
+
+        def send(self, data):
+            pass
+
+    def fake_create(addr):
+        attempts.append(1)
+        if len(attempts) < 3:
+            raise ConnectionRefusedError
+        return DummySocket()
+
+    monkeypatch.setattr(kc.socket, "create_connection", fake_create)
+    monkeypatch.setattr(kc.time, "sleep", lambda t: None)
+    kc.FRAME_QUEUE = kc.queue.Queue()
+    kc.FRAME_QUEUE.put(None)
+    kc._stop.clear()
+    kc._run()
+
+    assert len(attempts) >= 3
