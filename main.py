@@ -54,7 +54,7 @@ def start_direwolf():
     return subprocess.Popen(cmd)
 
 
-def start_rigctld(rig_id: int, usb_num: int, port: int):
+def start_rigctld(rig_id: int, usb_num: int, port: int, baud: int | None = None):
     rigctld_bin = (
         PROJECT_ROOT / "external" / "hamlib" / "build" / "tests" / "rigctld"
     )
@@ -67,6 +67,8 @@ def start_rigctld(rig_id: int, usb_num: int, port: int):
         "-t",
         str(port),
     ]
+    if baud is not None:
+        cmd.extend(["-s", str(baud)])
     log_info("Starting rigctld: %s", " ".join(cmd), source=LOG_SOURCE)
     return subprocess.Popen(cmd)
 
@@ -103,6 +105,7 @@ def main():
     parser = argparse.ArgumentParser(description="wx-helios combined launcher")
     parser.add_argument("--rig-id", type=int, help="rig model ID")
     parser.add_argument("--usb-num", type=int, help="/dev/ttyUSB device number")
+    parser.add_argument("--baud", type=int, help="serial speed for rigctld")
     parser.add_argument(
         "--telemetry-interval",
         type=int,
@@ -116,6 +119,8 @@ def main():
         args.rig_id = rig_cfg.get("rig_id")
     if args.usb_num is None:
         args.usb_num = rig_cfg.get("usb_num")
+    if args.baud is None:
+        args.baud = rig_cfg.get("baud")
     if args.rig_id is None or args.usb_num is None:
         parser.error("rig_id and usb_num must be provided via command line or configuration")
 
@@ -128,6 +133,7 @@ def main():
             args.rig_id,
             args.usb_num,
             rig_cfg.get("port", config.RIGCTLD_PORT),
+            args.baud,
         )
     else:
         log_info("rigctld disabled in configuration", source=LOG_SOURCE)
