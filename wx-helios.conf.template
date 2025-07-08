@@ -116,3 +116,19 @@ port = 8001
 # When the KISS client daemon is active, it exposes a multiprocessing queue
 # using environment variables KISS_MANAGER_HOST, KISS_MANAGER_PORT and
 # KISS_MANAGER_AUTHKEY for telemetry modules.
+
+[APRS_IS]
+# Enable sending packets to APRS-IS
+enabled = no
+
+# Callsign for the APRS-IS connection
+callsign = NOCALL-13
+
+# Passcode for APRS-IS authentication
+passcode = 12345
+
+# Server hostname for APRS-IS
+server = rotate.aprs2.net
+
+# TCP port for APRS-IS
+port = 14580

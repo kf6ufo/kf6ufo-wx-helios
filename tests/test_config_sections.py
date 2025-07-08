@@ -65,3 +65,22 @@ port = 9999
         "baud": 4800,
         "port": 9999,
     }
+
+
+def test_aprsis_default(tmp_path, monkeypatch):
+    write_config(tmp_path, "", monkeypatch)
+    assert config.load_aprsis_config() == {"enabled": False}
+
+
+def test_aprsis_values(tmp_path, monkeypatch):
+    conf = """[APRS]\ncallsign = N0CALL\nlatitude = 0\nlongitude = 0\n
+[APRS_IS]\nenabled = yes\npasscode = 2222\nserver = test.example\nport = 1234\n"""
+    write_config(tmp_path, conf, monkeypatch)
+    cfg = config.load_aprsis_config()
+    assert cfg == {
+        "enabled": True,
+        "callsign": "N0CALL",
+        "passcode": "2222",
+        "server": "test.example",
+        "port": 1234,
+    }
