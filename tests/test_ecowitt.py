@@ -118,3 +118,21 @@ def test_daily_rainfall_field():
     }
     frame = mod.ecowitt_to_aprs(params)
     assert "P025" in frame
+
+
+def test_unknown_fields_when_missing():
+    """Fields with missing sensor data should use the unknown marker."""
+    mod = load_module()
+    params = {
+        "winddir": "0",
+        "windspeedmph": "0",
+        "windgustmph": "0",
+        "tempf": "0",
+        "humidity": "50",
+        "dateutc": "2020-01-01 00:00:00",
+    }
+    frame = mod.ecowitt_to_aprs(params)
+    assert "r..." in frame
+    assert "p..." in frame
+    assert "P..." in frame
+    assert "b....." in frame

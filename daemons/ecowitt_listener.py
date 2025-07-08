@@ -97,19 +97,47 @@ def ecowitt_to_aprs(p):
     t_field = f"t{tf:03d}" if tf >= 0 else f"t-{abs(tf):02d}"
 
     # rainfall
-    rain1h  = float(p.get("hourlyrainin", 0))
-    rainmid = float(p.get("dailyrainin", 0))           # rainfall since local midnight
-    rRRR = clamp(int(round(rain1h  * 100)), 0, 999)
-    PQQQ = clamp(int(round(rainmid * 100)), 0, 999)
-    pPPP = clamp(update_rain_24h(p),        0, 999)
+    def maybe_float(val):
+        try:
+            return float(val)
+        except (TypeError, ValueError):
+            return None
+
+    rain1h_val = maybe_float(p.get("hourlyrainin"))
+    rainmid_val = maybe_float(p.get("dailyrainin"))  # rainfall since local midnight
+
+    if rain1h_val is None:
+        r_field = "r..."
+    else:
+        rRRR = clamp(int(round(rain1h_val * 100)), 0, 999)
+        r_field = f"r{rRRR:03d}"
+
+    if rainmid_val is None:
+        P_field = "P..."
+    else:
+        PQQQ = clamp(int(round(rainmid_val * 100)), 0, 999)
+        P_field = f"P{PQQQ:03d}"
+
+    if rain1h_val is None or "dateutc" not in p:
+        p_field = "p..."
+    else:
+        pPPP = clamp(update_rain_24h(p), 0, 999)
+        p_field = f"p{pPPP:03d}"
 
     # humidity
     rh_raw = int(float(p["humidity"]))
     rh = 0 if rh_raw <= 0 or rh_raw > 100 else rh_raw
 
     # pressure (absolute fallback)
-    press_in = float(p.get("baromrelin", p.get("baromabsin", 0)))
-    bp = clamp(int(round(press_in * 33.8639 * 10)), 0, 19999)
+    press_in = maybe_float(p.get("baromrelin"))
+    if press_in is None:
+        press_in = maybe_float(p.get("baromabsin"))
+
+    if press_in is None:
+        b_field = "b....."
+    else:
+        bp = clamp(int(round(press_in * 33.8639 * 10)), 0, 19999)
+        b_field = f"b{bp:05d}"
 
     # timestamp + assemble
     ts = datetime.now(timezone.utc).strftime("%d%H%M")
@@ -117,8 +145,8 @@ def ecowitt_to_aprs(p):
         f"@{ts}z{POS_BLOCK}"
         f"{wd:03d}/{ws:03d}g{wg:03d}"
         f"{t_field}"
-        f"r{rRRR:03d}p{pPPP:03d}P{PQQQ:03d}"
-        f"h{rh:02d}b{bp:05d}"
+        f"{r_field}{p_field}{P_field}"
+        f"h{rh:02d}{b_field}"
         f" KF6UFO-WX-Helios"
     )
 
