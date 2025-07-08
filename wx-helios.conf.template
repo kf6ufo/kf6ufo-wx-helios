@@ -61,13 +61,13 @@ digipeater_path = WIDE2-2
 enabled = yes
 symbol_table = primary
 symbol = _
-digipeater_path = WIDE1-1,WIDE2-1
+digipeater_path = WIDE2-1
 
 [DIREWOLF_TELEMETRY]
 # Options for telemetry generated from Direwolf logs
 symbol_table = primary
 symbol = _
-digipeater_path = WIDE1-1,WIDE2-1
+digipeater_path = WIDE2-1
 
 [DAEMONS]
 # Comma-separated list of daemon modules to launch
@@ -81,12 +81,12 @@ modules = telemetry.hub_telemetry, telemetry.direwolf_telemetry, telemetry.telem
 
 [TELEMETRY_SCHEDULES]
 # Cron expressions for individual telemetry modules
-# Run hub telemetry at the top of each hour
-telemetry.hub_telemetry = 0 * * * *
-# Example: poll Dire Wolf telemetry every 5 minutes
-telemetry.direwolf_telemetry = */5 * * * *
-# Transmit telemetry definitions every 6 hours
-telemetry.telemetry_defs = 0 */6 * * *
+# Run hub telemetry every 4 hours
+telemetry.hub_telemetry = 0 */4 * * *
+# Poll Dire Wolf telemetry every 4 hours
+telemetry.direwolf_telemetry = 0 */4 * * *
+# Transmit telemetry definitions every 12 hours
+telemetry.telemetry_defs = 0 */12 * * *
 # Example: run another module every 15 minutes
 #other.module = */15 * * * *
 

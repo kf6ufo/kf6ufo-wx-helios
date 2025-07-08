@@ -18,6 +18,8 @@ ENABLED = cfg.get("enabled", True)
 PORT = cfg.get("port", 8080)
 PATH = cfg.get("path", "/data/report")
 RAIN_CACHE = deque(maxlen=24)      # store tuples (timestamp, hourly_inch)
+MIN_INTERVAL = 300                 # minimum seconds between APRS packets
+LAST_TX = 0.0
 
 try:
     (
@@ -125,10 +127,20 @@ def log_params(client, params):
     utils.log_info("Ecowitt upload from %s", client, source=LOG_SOURCE)
     for k in sorted(params):
         utils.log_info("  %s: %s", k, params[k], source=LOG_SOURCE)
+    global LAST_TX
+    now = time.time()
+    if now - LAST_TX < MIN_INTERVAL:
+        utils.log_info(
+            "Skipping APRS packet, sent %.0f seconds ago",
+            now - LAST_TX,
+            source=LOG_SOURCE,
+        )
+        return
     info = ecowitt_to_aprs(params)
     utils.log_info(info, source=LOG_SOURCE)
     ax25 = utils.build_ax25_frame(_dest, _callsign, _digipeater_path, info)
     utils.send_via_kiss(ax25)
+    LAST_TX = now
 
 
 class Handler(BaseHTTPRequestHandler):
