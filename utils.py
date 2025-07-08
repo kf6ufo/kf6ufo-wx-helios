@@ -264,3 +264,39 @@ def send_via_kiss(ax25_frame):
         s.send(kiss_frame)
 
 
+def build_tnc2_frame(destination: str, source: str, path: list[str], info: str) -> str:
+    """Return a TNC2 formatted APRS frame."""
+    path_str = ",".join(path)
+    header = f"{source}>{destination}"
+    if path_str:
+        header += "," + path_str
+    return f"{header}:{info}"
+
+
+def send_via_aprsis(tnc2_frame):
+    """Send a TNC2 frame to APRS-IS if configured."""
+    from config import load_aprsis_config
+
+    cfg = load_aprsis_config()
+    if not cfg.get("enabled"):
+        return
+    try:
+        import aprslib
+    except Exception:
+        log_error("aprslib is not available", source=__name__)
+        return
+
+    try:
+        ais = aprslib.IS(
+            cfg.get("callsign"),
+            cfg.get("passcode"),
+            host=cfg.get("server"),
+            port=cfg.get("port"),
+        )
+        ais.connect()
+        ais.sendall(tnc2_frame)
+        ais.close()
+    except Exception as exc:
+        log_exception("APRS-IS send failed: %s", exc, source=__name__)
+
+

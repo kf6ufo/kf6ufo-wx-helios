@@ -49,6 +49,8 @@ cp direwolf.conf.template direwolf.conf
 The files contains configuration settings for the ``Direwolf TNC`` and **kf6ufo-wx-helios**.
 The minimum changes you'll need to make are in ``wx-helios.conf`` to edit your **callsign**,
 **latitude** and **longitude**.
+To forward packets to APRS-IS set the options in the ``[APRS_IS]`` section with
+your passcode and server details.
 
 ``Direwolf`` can be used by itself to handle PTT on the radio, or ``rigctld`` is included
 for more options in handling PTT.

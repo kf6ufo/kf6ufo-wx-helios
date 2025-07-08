@@ -139,6 +139,22 @@ def load_kiss_client_config():
     }
 
 
+def load_aprsis_config():
+    cfg = _get_config()
+    section = "APRS_IS"
+    if section not in cfg:
+        return {"enabled": False}
+    sec = cfg[section]
+    callsign = sec.get("callsign", cfg["APRS"].get("callsign"))
+    return {
+        "enabled": sec.getboolean("enabled", False),
+        "callsign": callsign,
+        "passcode": sec.get("passcode", ""),
+        "server": sec.get("server", "rotate.aprs2.net"),
+        "port": int(sec.get("port", 14580)),
+    }
+
+
 def load_rig_config():
     cfg = _get_config()
     section = "RIG"

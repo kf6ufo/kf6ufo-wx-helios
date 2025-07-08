@@ -30,7 +30,7 @@ try:
         _symbol,
         _digipeater_path,
         _dest,
-        _version,
+    _version,
     ) = config.load_aprs_config("ECOWITT")
 except Exception:
     _callsign = "NOCALL-13"
@@ -41,6 +41,11 @@ except Exception:
     _digipeater_path = []
     _dest = "APZ001"
     _version = ""
+
+try:
+    APRS_IS_CFG = config.load_aprsis_config()
+except Exception:
+    APRS_IS_CFG = {"enabled": False}
 
 def format_lat_lon(lat, lon):
     """Return APRS-formatted latitude and longitude strings."""
@@ -168,6 +173,14 @@ def log_params(client, params):
     utils.log_info(info, source=LOG_SOURCE)
     ax25 = utils.build_ax25_frame(_dest, _callsign, _digipeater_path, info)
     utils.send_via_kiss(ax25)
+    if APRS_IS_CFG.get("enabled"):
+        tnc2 = utils.build_tnc2_frame(
+            _dest,
+            APRS_IS_CFG.get("callsign", _callsign),
+            _digipeater_path,
+            info,
+        )
+        utils.send_via_aprsis(tnc2)
     LAST_TX = now
 
 
