@@ -33,7 +33,7 @@ try:
         _version,
     ) = config.load_aprs_config("ECOWITT")
 except Exception:
-    _callsign = "NOCALL"
+    _callsign = "NOCALL-13"
     _lat_dd = 0.0
     _lon_dd = 0.0
     _symbol_table = "/"

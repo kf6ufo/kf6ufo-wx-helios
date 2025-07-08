@@ -3,8 +3,8 @@
 # Copy this file to "wx-helios.conf" and edit the values for your station.
 
 [APRS]
-# Your callsign-SSID (replace NOCALL-10 with your real callsign)
-callsign = NOCALL-10
+# Your callsign-SSID (replace NOCALL-13 with your real callsign)
+callsign = NOCALL-13
 
 # Latitude in decimal degrees (positive for North, negative for South)
 latitude = 10.0
