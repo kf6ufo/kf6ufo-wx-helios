@@ -55,9 +55,7 @@ your passcode and server details.
 ``Direwolf`` can be used by itself to handle PTT on the radio, or ``rigctld`` is included
 for more options in handling PTT.
 If ``rigctld`` is enabled, be sure that the ``Direwolf`` port for ``rigctld`` is the same
-as is configured for ``rigctld`` in ``wx-helios,conf``.  The [RIG] section of
-``wx-helios.conf`` can also specify a ``baud`` option if your radio does not
-support automatic baud detection.
+as is configured for ``rigctld`` in ``wx-helios,conf``. 
 
 ## Running kf6ufo-wx-helios
 
