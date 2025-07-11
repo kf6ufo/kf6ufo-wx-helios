@@ -1,6 +1,9 @@
 import utils
 import config
 from unittest.mock import patch
+import sys
+import importlib.machinery
+import importlib.util
 
 class DummySocket:
     def __init__(self):
@@ -36,4 +39,36 @@ def test_send_via_aprsis(monkeypatch):
     assert captured['timeout'] == 3
     expected = b"user N0CALL pass 11111 vers wx-helios 0\r\nSRC>DEST:HELLO\r\n"
     assert dummy.sent == expected
+
+
+def test_send_via_aprsis_uses_daemon_queue(monkeypatch):
+    items = []
+
+    class DummyQueue:
+        def put(self, frame):
+            items.append(frame)
+
+    DummyModule = importlib.util.module_from_spec(
+        importlib.machinery.ModuleSpec('daemons.aprsis_client', None)
+    )
+    DummyModule.ENABLED = True
+    DummyModule.FRAME_QUEUE = DummyQueue()
+    DummyPkg = importlib.util.module_from_spec(
+        importlib.machinery.ModuleSpec('daemons', None)
+    )
+    DummyPkg.aprsis_client = DummyModule
+    monkeypatch.setitem(sys.modules, 'daemons', DummyPkg)
+    monkeypatch.setitem(sys.modules, 'daemons.aprsis_client', DummyModule)
+    for key in ['APRSIS_MANAGER_HOST', 'APRSIS_MANAGER_PORT', 'APRSIS_MANAGER_AUTHKEY']:
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setattr(config, 'load_aprsis_config', lambda: {'enabled': True})
+
+    def fail(*a, **k):
+        raise AssertionError('socket should not be used')
+
+    monkeypatch.setattr(utils.socket, 'create_connection', fail)
+
+    utils.send_via_aprsis('SRC>DEST:HELLO')
+
+    assert items == ['SRC>DEST:HELLO']
 

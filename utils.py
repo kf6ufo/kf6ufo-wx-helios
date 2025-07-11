@@ -277,6 +277,47 @@ def send_via_aprsis(tnc2_frame):
     """Send a TNC2 frame to APRS-IS if configured."""
     from config import load_aprsis_config
 
+    try:
+        from daemons import aprsis_client
+        if getattr(aprsis_client, "ENABLED", False) and hasattr(
+            aprsis_client, "FRAME_QUEUE"
+        ):
+            aprsis_client.FRAME_QUEUE.put(tnc2_frame)
+            return
+    except Exception:
+        pass
+
+    host = os.environ.get("APRSIS_MANAGER_HOST")
+    port = os.environ.get("APRSIS_MANAGER_PORT")
+    auth = os.environ.get("APRSIS_MANAGER_AUTHKEY")
+    if host and port and auth:
+        try:
+            authkey = bytes.fromhex(auth)
+
+            class _QueueManager(SyncManager):
+                pass
+
+            _QUEUE_METHODS = (
+                "empty",
+                "full",
+                "get",
+                "get_nowait",
+                "join",
+                "put",
+                "put_nowait",
+                "qsize",
+                "task_done",
+            )
+
+            _QueueManager.register("get_frame_queue", exposed=_QUEUE_METHODS)
+            mgr = _QueueManager(address=(host, int(port)), authkey=authkey)
+            mgr.connect()
+            q = mgr.get_frame_queue()
+            q.put(tnc2_frame)
+            return
+        except Exception:
+            pass
+
     cfg = load_aprsis_config()
     if not cfg.get("enabled"):
         return

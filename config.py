@@ -98,7 +98,7 @@ def load_daemon_modules():
     """Return list of enabled daemon module names."""
     return _load_module_list(
         "DAEMONS",
-        ["daemons.ecowitt_listener", "daemons.kiss_client"],
+        ["daemons.ecowitt_listener", "daemons.kiss_client", "daemons.aprsis_client"],
     )
 
 
