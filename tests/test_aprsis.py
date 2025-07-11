@@ -1,6 +1,5 @@
 import utils
 import config
-from unittest.mock import patch
 import sys
 import importlib.machinery
 import importlib.util
