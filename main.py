@@ -94,7 +94,17 @@ def run_telemetry_module(name: str):
     try:
         log_info("Running telemetry %s", name, source=LOG_SOURCE)
         env = os.environ.copy()
-        subprocess.run([sys.executable, "-m", name], env=env)
+        result = subprocess.run(
+            [sys.executable, "-m", name],
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        if result.stdout:
+            log_info("%s stdout: %s", name, result.stdout.strip(), source=LOG_SOURCE)
+        if result.stderr:
+            log_error("%s stderr: %s", name, result.stderr.strip(), source=LOG_SOURCE)
+        log_info("Telemetry %s exited with code %s", name, result.returncode, source=LOG_SOURCE)
     except Exception as exc:
         log_exception("Telemetry module %s failed: %s", name, exc, source=LOG_SOURCE)
 
