@@ -282,16 +282,26 @@ def send_via_aprsis(tnc2_frame):
         return
     try:
         import aprslib
+        import socket
     except Exception:
         log_error("aprslib is not available", source=__name__)
         return
 
+    class _IS(aprslib.IS):
+        def __init__(self, *args, timeout=10, **kwargs):
+            self._timeout = timeout
+            super().__init__(*args, **kwargs)
+
+        def _open_socket(self):
+            self.sock = socket.create_connection(self.server, self._timeout)
+
     try:
-        ais = aprslib.IS(
+        ais = _IS(
             cfg.get("callsign"),
             cfg.get("passcode"),
             host=cfg.get("server"),
             port=cfg.get("port"),
+            timeout=cfg.get("timeout", 10),
         )
         ais.connect()
         ais.sendall(tnc2_frame)

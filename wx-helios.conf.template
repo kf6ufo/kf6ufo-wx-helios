@@ -132,3 +132,6 @@ server = rotate.aprs2.net
 
 # TCP port for APRS-IS
 port = 14580
+
+# Connection timeout in seconds when contacting APRS-IS
+timeout = 10

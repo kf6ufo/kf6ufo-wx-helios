@@ -73,8 +73,11 @@ def test_aprsis_default(tmp_path, monkeypatch):
 
 
 def test_aprsis_values(tmp_path, monkeypatch):
-    conf = """[APRS]\ncallsign = N0CALL\nlatitude = 0\nlongitude = 0\n
-[APRS_IS]\nenabled = yes\npasscode = 2222\nserver = test.example\nport = 1234\n"""
+    conf = (
+        "[APRS]\ncallsign = N0CALL\nlatitude = 0\nlongitude = 0\n"
+        "[APRS_IS]\nenabled = yes\npasscode = 2222\nserver = test.example\n"
+        "port = 1234\ntimeout = 5\n"
+    )
     write_config(tmp_path, conf, monkeypatch)
     cfg = config.load_aprsis_config()
     assert cfg == {
@@ -83,4 +86,5 @@ def test_aprsis_values(tmp_path, monkeypatch):
         "passcode": "2222",
         "server": "test.example",
         "port": 1234,
+        "timeout": 5.0,
     }

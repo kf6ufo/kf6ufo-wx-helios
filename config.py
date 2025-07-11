@@ -152,6 +152,7 @@ def load_aprsis_config():
         "passcode": sec.get("passcode", ""),
         "server": sec.get("server", "rotate.aprs2.net"),
         "port": int(sec.get("port", 14580)),
+        "timeout": float(sec.get("timeout", 10)),
     }
 
 
