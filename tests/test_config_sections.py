@@ -14,6 +14,7 @@ def test_daemons_default(tmp_path, monkeypatch):
     assert config.load_daemon_modules() == [
         "daemons.ecowitt_listener",
         "daemons.kiss_client",
+        "daemons.aprsis_client",
     ]
 
 
