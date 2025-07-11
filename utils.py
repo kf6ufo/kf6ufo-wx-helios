@@ -280,32 +280,22 @@ def send_via_aprsis(tnc2_frame):
     cfg = load_aprsis_config()
     if not cfg.get("enabled"):
         return
+
+    host = cfg.get("server")
+    port = cfg.get("port")
+    callsign = cfg.get("callsign")
+    passcode = cfg.get("passcode")
+    timeout = cfg.get("timeout", 10)
+
+    login = f"user {callsign} pass {passcode} vers wx-helios 0\r\n".encode()
+    payload = (tnc2_frame + "\r\n").encode()
+
+    log_info("Connecting to APRS-IS %s:%s", host, port, source=__name__)
     try:
-        import aprslib
-        import socket
-    except Exception:
-        log_error("aprslib is not available", source=__name__)
-        return
-
-    class _IS(aprslib.IS):
-        def __init__(self, *args, timeout=10, **kwargs):
-            self._timeout = timeout
-            super().__init__(*args, **kwargs)
-
-        def _open_socket(self):
-            self.sock = socket.create_connection(self.server, self._timeout)
-
-    try:
-        ais = _IS(
-            cfg.get("callsign"),
-            cfg.get("passcode"),
-            host=cfg.get("server"),
-            port=cfg.get("port"),
-            timeout=cfg.get("timeout", 10),
-        )
-        ais.connect()
-        ais.sendall(tnc2_frame)
-        ais.close()
+        with socket.create_connection((host, port), timeout=timeout) as s:
+            s.sendall(login)
+            s.sendall(payload)
+        log_info("APRS-IS send complete", source=__name__)
     except Exception as exc:
         log_exception("APRS-IS send failed: %s", exc, source=__name__)
 
