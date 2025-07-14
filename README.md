@@ -29,9 +29,17 @@ The same Python code can be deployed on at least three target platforms:
 This repository includes the
 [wx-helios-direwolf](https://github.com/kf6ufo/wx-helios-direwolf) and
 [wx-helios-hamlib](https://github.com/kf6ufo/wx-helios-hamlib) submodules used
-to provide the Direwolf TNC and the `rigctld` daemon. Simply run the build
-script to fetch the latest sources and compile both projects. Hamlib is built
-first so Direwolf can detect the libraries and use the correct ``rigctld``.
+to provide the Direwolf TNC and the `rigctld` daemon. Before building, install
+the required development packages so CMake can locate ALSA and other
+dependencies:
+
+```bash
+sudo apt-get install build-essential cmake libasound2-dev pkg-config
+```
+
+After installing the dependencies, run the build script to fetch the latest
+sources and compile both projects. Hamlib is built first so Direwolf can detect
+the libraries and use the correct ``rigctld``.
 
 ```bash
 ./build_external.sh
