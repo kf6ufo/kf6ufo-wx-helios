@@ -3,6 +3,23 @@
 
 set -e
 
+# Ensure basic build tools and ALSA development headers are installed
+ensure_build_deps() {
+    if command -v cmake >/dev/null 2>&1 \
+        && command -v make >/dev/null 2>&1 \
+        && pkg-config --exists alsa; then
+        return
+    fi
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake libasound2-dev pkg-config
+    else
+        echo "Missing build tools or ALSA development files" >&2
+        echo "Please install cmake, pkg-config and libasound2-dev" >&2
+        exit 1
+    fi
+}
+
 # Absolute path to the project root
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -26,6 +43,7 @@ ensure_autotools() {
 # Build Hamlib using autotools
 build_hamlib() {
     ensure_autotools
+    ensure_build_deps
     local path="external/hamlib"
     git submodule update --init --remote "$path"
     cd "$path"
