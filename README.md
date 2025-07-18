@@ -45,6 +45,11 @@ the libraries and use the correct ``rigctld``.
 ./build_external.sh
 ```
 
+The script also installs Direwolf into ``external/direwolf/install`` so its
+runtime data files are available. If you build Direwolf manually, run
+``make install`` or set the ``DIREWOLF_DIR`` environment variable to the install
+prefix to avoid warnings about missing ``symbols-new.txt`` and ``tocalls.txt``.
+
 ## Configuration
 
 Copy the templates and edit the values for your station:

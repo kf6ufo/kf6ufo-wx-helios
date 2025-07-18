@@ -72,6 +72,7 @@ build_direwolf() {
     export PKG_CONFIG_PATH="$hamlib_root/lib/pkgconfig:$PKG_CONFIG_PATH"
     cmake .. -DHAMLIB_ROOT_DIR="$hamlib_root" -DCMAKE_PREFIX_PATH="$hamlib_root"
     make -j"$(nproc)"
+    make DESTDIR="$ROOT_DIR/external/direwolf/install" install
     cd ../../..
 }
 
