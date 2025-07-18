@@ -150,7 +150,7 @@ def load_aprsis_config():
         "enabled": sec.getboolean("enabled", False),
         "callsign": callsign,
         "passcode": sec.get("passcode", ""),
-        "server": sec.get("server", "rotate.aprs2.net"),
+        "server": sec.get("server", "noam.aprs2.net"),
         "port": int(sec.get("port", 14580)),
         "timeout": float(sec.get("timeout", 10)),
     }
