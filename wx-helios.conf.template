@@ -129,7 +129,7 @@ callsign = NOCALL-13
 passcode = 12345
 
 # Server hostname for APRS-IS
-server = rotate.aprs2.net
+server = noam.aprs2.net
 
 # TCP port for APRS-IS
 port = 14580
