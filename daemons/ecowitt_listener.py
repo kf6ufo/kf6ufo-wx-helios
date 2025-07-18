@@ -30,9 +30,12 @@ try:
         _symbol,
         _digipeater_path,
         _dest,
-    _version,
+        _version,
     ) = config.load_aprs_config("ECOWITT")
-except Exception:
+except Exception as exc:
+    utils.log_exception(
+        "Falling back to default APRS config: %s", exc, source=LOG_SOURCE
+    )
     _callsign = "NOCALL-13"
     _lat_dd = 0.0
     _lon_dd = 0.0
