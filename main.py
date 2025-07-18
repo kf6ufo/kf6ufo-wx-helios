@@ -50,8 +50,12 @@ def start_direwolf():
         "-a",
         "300",
     ]
+    env = os.environ.copy()
+    data_root = PROJECT_ROOT / "external" / "direwolf" / "install" / "usr" / "local"
+    if data_root.exists() and "DIREWOLF_DIR" not in env:
+        env["DIREWOLF_DIR"] = str(data_root)
     log_info("Starting Direwolf: %s", " ".join(cmd), source=LOG_SOURCE)
-    return subprocess.Popen(cmd)
+    return subprocess.Popen(cmd, env=env)
 
 
 def start_rigctld(rig_id: int, usb_num: int, port: int, baud: int | None = None):
