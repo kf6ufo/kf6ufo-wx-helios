@@ -17,6 +17,22 @@ def _get_config():
         _config = parser
     return _config
 
+_UNICODE_MINUS_TRANSLATION = str.maketrans({
+    "\u2212": "-",  # minus sign
+    "\u2013": "-",  # en dash
+    "\u2014": "-",  # em dash
+    "\u2015": "-",  # horizontal bar
+})
+
+
+def _parse_float(value: str) -> float:
+    """Parse a float while normalising Unicode minus characters."""
+
+    if isinstance(value, str):
+        value = value.translate(_UNICODE_MINUS_TRANSLATION)
+    return float(value)
+
+
 def load_aprs_config(section: str | None = None):
     """Return APRS configuration, optionally overridden per module.
 
@@ -35,8 +51,8 @@ def load_aprs_config(section: str | None = None):
     aprs = cfg["APRS"]
 
     callsign = aprs["callsign"]
-    latitude = float(aprs["latitude"])
-    longitude = float(aprs["longitude"])
+    latitude = _parse_float(aprs["latitude"])
+    longitude = _parse_float(aprs["longitude"])
 
     symbol_table_raw = aprs.get("symbol_table", "primary").strip().lower()
     symbol_table = "/" if symbol_table_raw == "primary" else "\\"

@@ -18,6 +18,19 @@ def test_daemons_default(tmp_path, monkeypatch):
     ]
 
 
+def test_aprs_unicode_minus(tmp_path, monkeypatch):
+    conf = (
+        "[APRS]\n"
+        "callsign = N0CALL-1\n"
+        "latitude = 37.7653\n"
+        "longitude = −108.9010\n"
+    )
+    write_config(tmp_path, conf, monkeypatch)
+    cfg = config.load_aprs_config()
+    assert cfg[1] == 37.7653
+    assert cfg[2] == -108.901
+
+
 def test_daemons_disabled(tmp_path, monkeypatch):
     write_config(tmp_path, "[DAEMONS]\nenabled = no\nmodules = a,b\n", monkeypatch)
     assert config.load_daemon_modules() == []
