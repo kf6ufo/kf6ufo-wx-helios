@@ -37,7 +37,12 @@ dependencies:
 sudo apt-get install build-essential cmake libasound2-dev pkg-config
 ```
 
-After installing the dependencies, run the build script to fetch the latest
+Download the repo with submodules:
+```bash
+git clone --recurse-submodules https://github.com/kf6ufo/kf6ufo-wx-helios.git
+```
+
+Then run the build script to fetch the latest
 sources and compile both projects. Hamlib is built first so Direwolf can detect
 the libraries and use the correct ``rigctld``.
 
